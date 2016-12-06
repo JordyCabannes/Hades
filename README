@@ -1,0 +1,5 @@
+#installation pyproxmox 
+	https://github.com/Daemonthread/pyproxmox
+
+#libraries
+	sudo pip install django
