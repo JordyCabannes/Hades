@@ -159,7 +159,7 @@ class pyproxmox:
 
     def getNodeContainerIndex(self,node):
         """OpenVZ container index (per node). Returns JSON"""
-        data = self.connect('get','nodes/%s/openvz' % (node),None)
+        data = self.connect('get','nodes/%s/lxc' % (node),None)
         return data
 
     def getNodeVirtualIndex(self,node):
@@ -271,37 +271,37 @@ class pyproxmox:
 
     def getContainerIndex(self,node,vmid):
         """Directory index. Returns JSON"""
-        data = self.connect('get','nodes/%s/openvz/%s' % (node,vmid),None)
+        data = self.connect('get','nodes/%s/lxc/%s' % (node,vmid),None)
         return data
 
     def getContainerStatus(self,node,vmid):
         """Get virtual machine status. Returns JSON"""
-        data = self.connect('get','nodes/%s/openvz/%s/status/current' % (node,vmid),None)
+        data = self.connect('get','nodes/%s/lxc/%s/status/current' % (node,vmid),None)
         return data
 
     def getContainerBeans(self,node,vmid):
         """Get container user_beancounters. Returns JSON"""
-        data = self.connect('get','nodes/%s/openvz/%s/status/ubc' % (node,vmid),None)
+        data = self.connect('get','nodes/%s/lxc/%s/status/ubc' % (node,vmid),None)
         return data
 
     def getContainerConfig(self,node,vmid):
         """Get container configuration. Returns JSON"""
-        data = self.connect('get','nodes/%s/openvz/%s/config' % (node,vmid),None)
+        data = self.connect('get','nodes/%s/lxc/%s/config' % (node,vmid),None)
         return data
 
     def getContainerInitLog(self,node,vmid):
         """Read init log. Returns JSON"""
-        data = self.connect('get','nodes/%s/openvz/%s/initlog' % (node,vmid),None)
+        data = self.connect('get','nodes/%s/lxc/%s/initlog' % (node,vmid),None)
         return data
 
     def getContainerRRD(self,node,vmid):
         """Read VM RRD statistics. Returns PNG"""
-        data = self.connect('get','nodes/%s/openvz/%s/rrd' % (node,vmid),None)
+        data = self.connect('get','nodes/%s/lxc/%s/rrd' % (node,vmid),None)
         return data
 
     def getContainerRRDData(self,node,vmid):
         """Read VM RRD statistics. Returns RRD"""
-        data = self.connect('get','nodes/%s/openvz/%s/rrddata' % (node,vmid),None)
+        data = self.connect('get','nodes/%s/lxc/%s/rrddata' % (node,vmid),None)
         return data
 
     # KVM Methods
@@ -372,43 +372,43 @@ class pyproxmox:
         Create or restore a container. Returns JSON
         Requires a dictionary of tuples formatted [('postname1','data'),('postname2','data')]
         """
-        data = self.connect('post','nodes/%s/openvz' % (node), post_data)
+        data = self.connect('post','nodes/%s/lxc' % (node), post_data)
         return data
 
     def mountOpenvzPrivate(self,node,vmid):
         """Mounts container private area. Returns JSON"""
         post_data = None
-        data = self.connect('post','nodes/%s/openvz/%s/status/mount' % (node,vmid), post_data)
+        data = self.connect('post','nodes/%s/lxc/%s/status/mount' % (node,vmid), post_data)
         return data
 
     def shutdownOpenvzContainer(self,node,vmid):
         """Shutdown the container. Returns JSON"""
         post_data = None
-        data = self.connect('post','nodes/%s/openvz/%s/status/shutdown' % (node,vmid), post_data)
+        data = self.connect('post','nodes/%s/lxc/%s/status/shutdown' % (node,vmid), post_data)
         return data
 
     def startOpenvzContainer(self,node,vmid):
         """Start the container. Returns JSON"""
         post_data = None
-        data = self.connect('post','nodes/%s/openvz/%s/status/start' % (node,vmid), post_data)
+        data = self.connect('post','nodes/%s/lxc/%s/status/start' % (node,vmid), post_data)
         return data
 
     def stopOpenvzContainer(self,node,vmid):
         """Stop the container. Returns JSON"""
         post_data = None
-        data = self.connect('post','nodes/%s/openvz/%s/status/stop' % (node,vmid), post_data)
+        data = self.connect('post','nodes/%s/lxc/%s/status/stop' % (node,vmid), post_data)
         return data
 
     def unmountOpenvzPrivate(self,node,vmid):
         """Unmounts container private area. Returns JSON"""
         post_data = None
-        data = self.connect('post','nodes/%s/openvz/%s/status/unmount' % (node,vmid), post_data)
+        data = self.connect('post','nodes/%s/lxc/%s/status/unmount' % (node,vmid), post_data)
         return data
 
     def migrateOpenvzContainer(self,node,vmid,target):
         """Migrate the container to another node. Creates a new migration task. Returns JSON"""
         post_data = {'target': str(target)}
-        data = self.connect('post','nodes/%s/openvz/%s/migrate' % (node,vmid), post_data)
+        data = self.connect('post','nodes/%s/lxc/%s/migrate' % (node,vmid), post_data)
         return data
 
     # KVM Methods
@@ -547,7 +547,7 @@ class pyproxmox:
     
     def deleteOpenvzContainer(self,node,vmid):
         """Deletes the specified openvz container"""
-        data = self.connect('delete',"nodes/%s/openvz/%s" % (node,vmid),None)
+        data = self.connect('delete',"nodes/%s/lxc/%s" % (node,vmid),None)
         return data
 
     # NODE
@@ -617,7 +617,7 @@ class pyproxmox:
     # OPENVZ
     def setOpenvzContainerOptions(self,node,vmid,post_data):
         """Set openvz virtual machine options."""
-        data = self.connect('put',"nodes/%s/openvz/%s/config" % (node,vmid), post_data)
+        data = self.connect('put',"nodes/%s/lxc/%s/config" % (node,vmid), post_data)
         return data
     
     # KVM
