@@ -15,6 +15,7 @@ For more information see https://github.com/Daemonthread/pyproxmox.
 import json
 import requests
 import sys
+from pprint import pprint
 
 def ununicode(data):
     if isinstance(data, dict):
@@ -120,13 +121,14 @@ class pyproxmox:
                                           cookies = self.ticket)
 
         try:
-            self.returned_data = self.response.json()
+            self.returned_data = ununicode(self.response.json())
             status = {'status':{'code':self.response.status_code,'ok':self.response.ok,'reason':self.response.reason}}
+            self.returned_data.update(status)
             if status['status']['code'] != 200:
-                print('\nErreur : La requête est revenue avec un code != 200.')
-                print(status)
+                print('\nWarning : La requête est revenue avec un code != 200.')
+                pprint(self.returned_data)
                 print('\n')
-            return ununicode(self.returned_data)
+            return self.returned_data
         except:
             print("Error in trying to process JSON")
             print(self.response)
