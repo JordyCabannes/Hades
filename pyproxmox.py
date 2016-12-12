@@ -18,6 +18,9 @@ import sys
 from pprint import pprint
 
 def ununicode(data):
+    """Convertit récursivement tous les strings unicodes en utf-8.
+        data est normalement un dict json
+    """
     if isinstance(data, dict):
         dict_ = {}
         for (k, v) in data.iteritems():
