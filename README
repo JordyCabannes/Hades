@@ -3,3 +3,13 @@
 
 #libraries
 	sudo pip install django
+
+#nom de la bdd : be_cloud
+
+#avant de run le serveur 
+Before launching your server, to access your Admin Interface, you need to initiate the database −
+$ python manage.py migrate
+
+
+#run le serveur 
+	python manage.py runserver
