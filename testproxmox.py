@@ -77,6 +77,46 @@ def creer_container_test(flavor=flavor,
     return response
 
 
+def lister_toutes_vms():
+    raise NotImplementedError
+
+def lister_vms_user():
+    raise NotImplementedError
+
+def creer_vm():
+    raise NotImplementedError
+
+def tuer_vm():
+    raise NotImplementedError
+
+def migrer_vm():
+    raise NotImplementedError
+
+def resize_vm():
+    raise NotImplementedError
+
+def creer_stockage_partage():
+    raise NotImplementedError
+
+def creer_reseau_virtuel():
+    raise NotImplementedError
+
+def ajouter_vm_au_reseau_virtuel():
+    raise NotImplementedError
+
+def relever_metriques_vm():
+    raise NotImplementedError
+
+def relever_metriques_cluster():
+    raise NotImplementedError
+
+def calculer_montant_facturation_vm():
+    raise NotImplementedError
+
+def calculer_montant_facturation_user():
+    raise NotImplementedError
+
+
 pprint(b.getClusterNodeList()['data']) #liste des nodes avec leurs nom, cpu/disk/mem et utilisation
 
 pprint(b.getClusterLog()['data'])
