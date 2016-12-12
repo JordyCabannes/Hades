@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 A python wrapper for the Proxmox 2.x API.
 Example usage:
@@ -13,6 +15,22 @@ For more information see https://github.com/Daemonthread/pyproxmox.
 import json
 import requests
 import sys
+
+def ununicode(data):
+    if isinstance(data, dict):
+        dict_ = {}
+        for (k, v) in data.iteritems():
+            dict_[str(k)] = ununicode(v)
+        return dict_
+    elif isinstance(data, list):
+        list_ = []
+        for el in data:
+            list_.append(ununicode(el))
+        return list_
+    elif isinstance(data, unicode):
+        return str(data)
+    else:
+        return data
 
 # Authentication class
 class prox_auth:
@@ -103,8 +121,12 @@ class pyproxmox:
 
         try:
             self.returned_data = self.response.json()
-            self.returned_data.update({'status':{'code':self.response.status_code,'ok':self.response.ok,'reason':self.response.reason}})
-            return self.returned_data
+            status = {'status':{'code':self.response.status_code,'ok':self.response.ok,'reason':self.response.reason}}
+            if status['status']['code'] != 200:
+                print('\nErreur : La requête est revenue avec un code != 200.')
+                print(status)
+                print('\n')
+            return ununicode(self.returned_data)
         except:
             print("Error in trying to process JSON")
             print(self.response)
