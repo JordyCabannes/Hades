@@ -4,9 +4,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./src/www.js",
-    "test": "mocha ./tests/test.js",
-	"compile": "tsc -p ./src"
+    "start": "tsc -p ./src && node ./src/www.js",
+    "test": "mocha ./tests/test.js"
   },
   "dependencies": {
     "body-parser": "~1.12.0",
