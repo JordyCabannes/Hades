@@ -31,10 +31,13 @@ export class Flavor {
         this.swap = swap;
     }
 }
- 
+
+
 @Entity()
 export class User {
- 
+
+    _id: ObjectID;
+
     @Field()
     login: string;
  
@@ -50,7 +53,10 @@ export class User {
     @Field()
     last_billed: Date;
  
-    constructor(text: string) {
+    @ElementType(number)
+    owned_vms: number[];
+
+    constructor(login: string, password: string, status: UserClass) {
         this.login = login;
         this.password = password;
         this.status = user_class;
