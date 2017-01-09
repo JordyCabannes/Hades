@@ -1,0 +1,49 @@
+Etapes à suivre pour setup la BDD:
+- Ouvrir un terminal puis : 
+mongod --dbpath "C:\Users\nperez\Documents\GitHub\Hades\node-express-typescript\mongo\data"
+- Ouvrir un autre terminal puis :
+mongo
+- Normalement on est connecté à la BDD et on a un prompt. 
+use hades
+
+
+
+
+db.flavors.insert(
+  {
+    "xsmall": {"cpus": 1, "memory": 512, "disk": 10, "swap": 1024},
+    "small":  {"cpus": 1, "memory": 1024, "disk": 15, "swap": 1024},
+    "medium": {"cpus": 2, "memory": 2048, "disk": 20, "swap": 4096},
+    "large":  {"cpus": 2, "memory": 4096, "disk": 50, "swap": 8192},
+    "xlarge": {"cpus": 4, "memory": 8192, "disk": 100, "swap": 16384}
+  }
+)
+
+db.servers.insert()
+db.users.insert()
+
+users =
+[
+  {"login": LOGIN,
+  "password": PASSWORD,
+  "user_class": USERCLASS,
+  "date_joined": DATE,
+  "owns": {
+    "containers": [
+      {
+        "id_proxmox": IDPROXMOX,
+        "last_paid": DATE
+      }
+    ],
+    "vms": [
+      {
+        "id_proxmox": IDPROXMOX,
+        "last_paid": DATE
+      }
+    ]
+  }
+  
+  }
+]
+
+USERCLASS: "Free" ou "Premium"
