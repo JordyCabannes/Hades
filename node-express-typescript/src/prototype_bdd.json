@@ -1,6 +1,6 @@
 Etapes à suivre pour setup la BDD:
 - Ouvrir un terminal puis : 
-mongod --dbpath "C:\Users\nperez\Documents\GitHub\Hades\node-express-typescript\mongo\data"
+mongod --dbpath "src\mongo\data"
 - Ouvrir un autre terminal puis :
 mongo
 - Normalement on est connecté à la BDD et on a un prompt. 

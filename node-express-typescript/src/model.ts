@@ -1,4 +1,4 @@
-import {Entity, Field} from "hydrate-mongodb";
+import {Entity, Field, ElementType} from "hydrate-mongodb";
  
 export enum UserClass {
     Free, 
@@ -36,8 +36,6 @@ export class Flavor {
 @Entity()
 export class User {
 
-    _id: ObjectID;
-
     @Field()
     login: string;
  
@@ -53,13 +51,13 @@ export class User {
     @Field()
     last_billed: Date;
  
-    @ElementType(number)
-    owned_vms: number[];
+    @ElementType(Number)
+    owned_vms: Number[];
 
-    constructor(login: string, password: string, status: UserClass) {
+    constructor(login: string, password: string, user_class: UserClass) {
         this.login = login;
         this.password = password;
-        this.status = user_class;
+        this.user_class = user_class;
         this.date_joined = new Date();
         this.last_billed = new Date();
     }

@@ -41,10 +41,10 @@ Flavor = __decorate([
 ], Flavor);
 exports.Flavor = Flavor;
 var User = (function () {
-    function User(login, password, status) {
+    function User(login, password, user_class) {
         this.login = login;
         this.password = password;
-        this.status = user_class;
+        this.user_class = user_class;
         this.date_joined = new Date();
         this.last_billed = new Date();
     }
@@ -66,7 +66,7 @@ __decorate([
     hydrate_mongodb_1.Field()
 ], User.prototype, "last_billed", void 0);
 __decorate([
-    ElementType(number)
+    hydrate_mongodb_1.ElementType(Number)
 ], User.prototype, "owned_vms", void 0);
 User = __decorate([
     hydrate_mongodb_1.Entity()
