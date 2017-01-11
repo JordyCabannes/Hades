@@ -1,6 +1,15 @@
 "use strict";
-var express_1 = require("express");
-var index = express_1.Router();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+    });
+};
+const express_1 = require('express');
+const proxmox_service_1 = require("../services/proxmox.service");
+const index = express_1.Router();
 /* GET home page. */
 index.get('/', function (req, res, next) {
     // var session = sf.v.createSession();
@@ -37,7 +46,20 @@ index.get('/', function (req, res, next) {
 });
 /* GET Quick Start. */
 index.get('/quickstart', function (req, res, next) {
-    console.log("lol");
+    return __awaiter(this, void 0, void 0, function* () {
+        var container = {
+            ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+            vmid: 111,
+            password: 'rootroot',
+            memory: 1024
+        };
+        var proxmox = new proxmox_service_1.ProxmoxService('ip', 'node');
+        var proxmoxApi = yield proxmox.connect('username', 'password');
+        if (proxmoxApi != null) {
+            var result = yield proxmoxApi.createLxcContainer(container);
+            console.log(result);
+        }
+    });
 });
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = index;

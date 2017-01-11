@@ -5,22 +5,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var hydrate_mongodb_1 = require("hydrate-mongodb");
-var UserClass;
+const hydrate_mongodb_1 = require("hydrate-mongodb");
 (function (UserClass) {
     UserClass[UserClass["Free"] = 0] = "Free";
     UserClass[UserClass["Premium"] = 1] = "Premium";
-})(UserClass = exports.UserClass || (exports.UserClass = {}));
-var Flavor = (function () {
-    function Flavor(name, cpus, memory, disk, swap) {
+})(exports.UserClass || (exports.UserClass = {}));
+var UserClass = exports.UserClass;
+let Flavor = class Flavor {
+    constructor(name, cpus, memory, disk, swap) {
         this.name = name;
         this.cpus = cpus;
         this.memory = memory;
         this.disk = disk;
         this.swap = swap;
     }
-    return Flavor;
-}());
+};
 __decorate([
     hydrate_mongodb_1.Field()
 ], Flavor.prototype, "name", void 0);
@@ -40,16 +39,15 @@ Flavor = __decorate([
     hydrate_mongodb_1.Entity()
 ], Flavor);
 exports.Flavor = Flavor;
-var User = (function () {
-    function User(login, password, user_class) {
+let User = class User {
+    constructor(login, password, user_class) {
         this.login = login;
         this.password = password;
         this.user_class = user_class;
         this.date_joined = new Date();
         this.last_billed = new Date();
     }
-    return User;
-}());
+};
 __decorate([
     hydrate_mongodb_1.Field()
 ], User.prototype, "login", void 0);

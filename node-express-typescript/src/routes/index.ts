@@ -2,6 +2,10 @@ import {Router} from 'express';
 import {User, UserClass, Flavor} from "../model";
 
 import sf = require("../server");
+import {ICreateLxcContainerRequest} from "../interfaces/create-lxc-container-request.interface";
+import {ProxmoxService} from "../services/proxmox.service";
+import {ProxmoxApiService} from "../services/proxmox-api.service";
+import {ICreateLxcContainerReply} from "../interfaces/create-lxc-container-reply.interface";
 
 const index = Router();
 
@@ -43,8 +47,20 @@ index.get('/', function(req, res, next) {
 });
 
 /* GET Quick Start. */
-index.get('/quickstart', function(req, res, next) {
-  console.log("lol");
+index.get('/quickstart', async function(req, res, next) {
+    var container : ICreateLxcContainerRequest = {
+        ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+        vmid : 111,
+        password : 'rootroot',
+        memory:1024
+    }
+
+    var proxmox = new ProxmoxService('ip','node');
+    var proxmoxApi : ProxmoxApiService = await proxmox.connect('username', 'password');
+    if(proxmoxApi != null) {
+        var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer(container);
+        console.log(result);
+    }
 });
 
 export default index;
