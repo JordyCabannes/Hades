@@ -1,11 +1,11 @@
 "use strict";
-const express = require('express');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
-const path_1 = require('path');
-const index_1 = require('./routes/index');
-const users_1 = require('./routes/users');
-const cookieParser = require('cookie-parser'); // this module doesn't use the ES6 default export yet
+const express = require("express");
+const logger = require("morgan");
+const bodyParser = require("body-parser");
+const path_1 = require("path");
+const index_1 = require("./routes/index");
+const users_1 = require("./routes/users");
+const cookieParser = require("cookie-parser"); // this module doesn't use the ES6 default export yet
 const app = express();
 // view engine setup
 app.set('views', path_1.join(__dirname, 'views'));

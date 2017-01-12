@@ -1,7 +1,7 @@
 "use strict";
-const app_1 = require('./app');
-const debugModule = require('debug');
-const http = require('http');
+const app_1 = require("./app");
+const debugModule = require("debug");
+const http = require("http");
 const debug = debugModule('node-express-typescript:server');
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '3000');

@@ -1,7 +1,6 @@
 import {Router} from 'express';
-import {User, UserClass, Flavor} from "../model";
+import { UserClass } from "../model";
 
-import sf = require("../server");
 import {ICreateLxcContainerRequest} from "../interfaces/create-lxc-container-request.interface";
 import {ProxmoxService} from "../services/proxmox.service";
 import {ProxmoxApiService} from "../services/proxmox-api.service";
@@ -24,8 +23,8 @@ index.get('/quickstart', async function(req, res, next) {
         memory:1024
     }
 
-    var proxmox = new ProxmoxService('ip','node');
-    var proxmoxApi : ProxmoxApiService = await proxmox.connect('username', 'password');
+    var proxmox = new ProxmoxService('ip','ns3060138');
+    var proxmoxApi : ProxmoxApiService = await proxmox.connect('root@pam', 'password');
     if(proxmoxApi != null) {
         var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer(container);
         console.log(result);

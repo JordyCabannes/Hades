@@ -15,10 +15,11 @@
     "jade": "~1.9.2",
     "less-middleware": "~2.0.1",
     "morgan": "~1.5.1",
-    "serve-favicon": "~2.2.0"
+    "serve-favicon": "~2.2.0",
+    "mongodb": "~2.0",
+    "kerberos" : "~0.0"
   },
   "devDependencies": {
-    "@types/core-js": "^0.9.35",
     "browser-sync": "^2.8.2",
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
