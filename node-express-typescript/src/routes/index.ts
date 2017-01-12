@@ -16,7 +16,7 @@ index.get('/', function(req, res, next) {
     console.log("lolilol");
 });
 
-/* GET Quick Start. */
+/* post createVM */
 index.post('/createVM', async function(req, res, next) 
 {
     console.log(req.body);

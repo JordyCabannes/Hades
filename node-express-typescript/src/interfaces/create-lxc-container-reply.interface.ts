@@ -3,5 +3,5 @@
  */
 
 export interface ICreateLxcContainerReply  {
-    createContainerInformation : string
+    upid : string
 }
