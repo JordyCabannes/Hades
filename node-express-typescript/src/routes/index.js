@@ -20,20 +20,24 @@ index.get('/', function (req, res, next) {
     console.log("lolilol");
 });
 /* GET Quick Start. */
-index.get('/quickstart', function (req, res, next) {
+index.post('/createVM', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(req.body);
         var container = {
             ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-            vmid: 111,
-            password: 'rootroot',
-            memory: 1024
+            vmid: 11251,
+            password: req.body.password,
+            memory: req.body.memory
         };
-        var proxmox = new proxmox_service_1.ProxmoxService('ip', 'ns3060138');
-        var proxmoxApi = yield proxmox.connect('root@pam', 'password');
+        var proxmox = new proxmox_service_1.ProxmoxService('213.32.27.237', '/api2/json');
+        var proxmoxApi = yield proxmox.connect('root@pam', 'dshTYjUrW6CA');
         if (proxmoxApi != null) {
+            console.log(" connection object " + proxmoxApi);
             var result = yield proxmoxApi.createLxcContainer(container);
-            console.log(result);
+            res.send(result); //send back vm creation information
         }
+        //error 
+        res.send({});
     });
 });
 Object.defineProperty(exports, "__esModule", { value: true });
