@@ -18,17 +18,22 @@ index.get('/', function(req, res, next) {
 
 /* GET Quick Start. */
 index.get('/createVM', async function(req, res, next) {
-    var container : ICreateLxcContainerRequest = {
-        ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-        vmid : 111,
-        password : 'rootroot',
-        memory:1024
-    }
 
-    var proxmox = new ProxmoxService('ip','ns3060138');
+    var proxmox = new ProxmoxService('ip', 'api2/json');
     var proxmoxApi : ProxmoxApiService = await proxmox.connect('root@pam', 'password');
     if(proxmoxApi != null) {
-        var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer(container);
+
+
+        var cNextVmId = await proxmoxApi.getClusterVmNextId();
+        var container : ICreateLxcContainerRequest = {
+            ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+            vmid : cNextVmId.id,
+            password : 'rootroot',
+            memory:1024
+        }
+
+        var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer('ns3060138', container);
+
         console.log(result);
     }
 });

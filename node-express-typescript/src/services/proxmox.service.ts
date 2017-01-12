@@ -10,11 +10,12 @@ const PROXMOX_PORT : string = '8006';
 export class ProxmoxService
 {
     private endpoint : string;
-    private node : string;
-    constructor(endpoint : string, node : string)
+    private apiUrl : string;
+
+    constructor(endpoint : string, apiUrl : string)
     {
-        this.endpoint =  `https://${endpoint}:${PROXMOX_PORT}`;
-        this.node = node;
+        this.endpoint =  `https://${endpoint}:${PROXMOX_PORT}${apiUrl}`;
+        this.apiUrl = apiUrl;
     }
 
     public async connect(username, password)
@@ -25,13 +26,13 @@ export class ProxmoxService
             username : username
         };
 
-        var response = await httpService.post('/api2/json/access/ticket', connectData);
+        var response = await httpService.post('/access/ticket', connectData);
 
         if(response.code != 200)
             return null;
 
         var body = response.getBody();
-        var proxmoxApi = new ProxmoxApiService(this.endpoint, this.node, {PVEAuthCookie: body['data']['ticket']}, body['data']['CSRFPreventionToken'])
+        var proxmoxApi = new ProxmoxApiService(this.endpoint, {PVEAuthCookie: body['data']['ticket']}, body['data']['CSRFPreventionToken'])
         return proxmoxApi;
     }
 }

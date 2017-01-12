@@ -14,9 +14,9 @@ const proxmox_api_service_1 = require("./proxmox-api.service");
  */
 const PROXMOX_PORT = '8006';
 class ProxmoxService {
-    constructor(endpoint, node) {
-        this.endpoint = `https://${endpoint}:${PROXMOX_PORT}`;
-        this.node = node;
+    constructor(endpoint, apiUrl) {
+        this.endpoint = `https://${endpoint}:${PROXMOX_PORT}${apiUrl}`;
+        this.apiUrl = apiUrl;
     }
     connect(username, password) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -25,11 +25,11 @@ class ProxmoxService {
                 password: password,
                 username: username
             };
-            var response = yield httpService.post('/api2/json/access/ticket', connectData);
+            var response = yield httpService.post('/access/ticket', connectData);
             if (response.code != 200)
                 return null;
             var body = response.getBody();
-            var proxmoxApi = new proxmox_api_service_1.ProxmoxApiService(this.endpoint, this.node, { PVEAuthCookie: body['data']['ticket'] }, body['data']['CSRFPreventionToken']);
+            var proxmoxApi = new proxmox_api_service_1.ProxmoxApiService(this.endpoint, { PVEAuthCookie: body['data']['ticket'] }, body['data']['CSRFPreventionToken']);
             return proxmoxApi;
         });
     }
