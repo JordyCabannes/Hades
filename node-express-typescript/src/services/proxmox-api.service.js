@@ -30,6 +30,7 @@ class ProxmoxApiService {
          if(response.code != 200)
              return null;
      }*/
+    /*monitoring*/
     getContainerStatus(node, vmid) {
         return __awaiter(this, void 0, void 0, function* () {
             var finalUrl = `/nodes/${node}/lxc/${vmid}/status/current`;

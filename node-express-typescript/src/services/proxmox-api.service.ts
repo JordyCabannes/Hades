@@ -39,6 +39,7 @@ export class ProxmoxApiService
             return null;
     }*/
 
+    /*monitoring*/
     public async getContainerStatus(node : string, vmid : number) : Promise<IGetContainerStatusReply>
     {
         var finalUrl = `/nodes/${node}/lxc/${vmid}/status/current`;
@@ -51,6 +52,7 @@ export class ProxmoxApiService
         return body;
     }
 
+    
     public async getClusterVmNextId() : Promise<IGetClusterVmNextIdReply>
     {
         var finalUrl = `/cluster/nextid`;

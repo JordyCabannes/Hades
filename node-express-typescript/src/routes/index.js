@@ -11,50 +11,52 @@ const express_1 = require("express");
 const proxmox_service_1 = require("../services/proxmox.service");
 const dbManager_1 = require("../services/database/dbManager");
 const index = express_1.Router();
+/*db Manager*/
+var db = new dbManager_1.DBManager();
 /* GET home page. */
 index.get('/', function (req, res, next) {
     // ajouter_user('coucou', 'blah', UserClass.Free)
-    var db = new dbManager_1.DBManager();
-    db.ajouter_user("coucou", "prout", "toto");
+    db.ajouter_user("coucou", "prout", "Free");
     db.ajouter_vm_a_user('coucou', 130);
     console.log("lolilol");
 });
-/* GET Quick Start. */
-<<<<<<< HEAD
+/* post createVM */
 index.post('/createVM', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(req.body);
-        var container = {
-            ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-            vmid: 11251,
-            password: req.body.password,
-            memory: req.body.memory
-        };
-        var proxmox = new proxmox_service_1.ProxmoxService('213.32.27.237', '/api2/json');
-        var proxmoxApi = yield proxmox.connect('root@pam', 'dshTYjUrW6CA');
-        if (proxmoxApi != null) {
-            console.log(" connection object " + proxmoxApi);
-            var result = yield proxmoxApi.createLxcContainer(container);
-            res.send(result); //send back vm creation information
-=======
-index.get('/createVM', function (req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        var proxmox = new proxmox_service_1.ProxmoxService('ip', 'api2/json');
+        console.log("request body" + req.body);
+        //connection 
+        var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
         var proxmoxApi = yield proxmox.connect('root@pam', 'password');
-        if (proxmoxApi != null) {
-            var cNextVmId = yield proxmoxApi.getClusterVmNextId();
-            var container = {
-                ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-                vmid: cNextVmId.id,
-                password: 'rootroot',
-                memory: 1024
-            };
-            var result = yield proxmoxApi.createLxcContainer('ns3060138', container);
-            console.log(result);
->>>>>>> 32d477008ee7b2b0dbefe12b510856152b0a8e00
+        //free or premium
+        var typeUser = yield db.getTypeOfUser("coucou");
+        var numberVM = yield db.countUserNbVM("coucou");
+        console.log(".............****************************", typeUser);
+        console.log("..............********************************", numberVM);
+        if (typeUser == "Free" && numberVM > 0) {
+            res.send({ "containerID": -1, "information": "Cannot create more vm" });
         }
-        //error 
-        res.send({});
+        else {
+            if (proxmoxApi != null) {
+                var ObjectID = yield proxmoxApi.getClusterVmNextId();
+                var container = {
+                    ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+                    vmid: ObjectID.id,
+                    password: req.body.password,
+                    memory: req.body.memory,
+                };
+                var result = yield proxmoxApi.createLxcContainer('ns3060138', container);
+                if (result == null) {
+                    res.send({ "containerID": -1, "information": "" });
+                }
+                else {
+                    db.ajouter_vm_a_user(req.body.login, ObjectID.id);
+                    res.send({ "containerID": ObjectID.id, "information": "" }); //send back vm creation information
+                }
+            }
+            else {
+                res.send({ "containerID": -1 });
+            }
+        }
     });
 });
 Object.defineProperty(exports, "__esModule", { value: true });

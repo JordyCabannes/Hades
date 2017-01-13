@@ -1,19 +1,20 @@
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
 
 export class DBManager  
 {
+    private url :string;
+
 
     public constructor()
     {
-        console.log("call dbManager constructor");
+        this.url=  'mongodb://localhost:27017/hades';
+        //console.log("call dbManager constructor");
     }
 
     public  insert_mongodb(table: string, data: any)
     {
-        var MongoClient = require('mongodb').MongoClient;
-        var assert = require('assert');
-        var ObjectId = require('mongodb').ObjectID;
-        var url = 'mongodb://localhost:27017/hades';
-
         var insertDocument = function(db, callback) {
             db.collection(table).insertOne(data, function(err, result) {
                 assert.equal(err, null);
@@ -22,7 +23,7 @@ export class DBManager
             });
         };
 
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(this.url, function(err, db) {
             assert.equal(null, err);
             insertDocument(db, function() {
                 db.close();
@@ -30,12 +31,12 @@ export class DBManager
         });
     }
 
-    public ajouter_user(login: string, password: string, user_class: string)
+    public ajouter_user(login: string, password: string, userType: string)
     {
         var data = {
             "login": login,
             "password": password,
-            "user_class": user_class,
+            "typeofUser": userType,
             "date_joined": new Date(),
             "last_billed": new Date(),
             "owned_vms": []
@@ -45,11 +46,6 @@ export class DBManager
 
     public ajouter_vm_a_user(login: string, id_vm: number)
     {
-        var MongoClient = require('mongodb').MongoClient;
-        var assert = require('assert');
-        var ObjectId = require('mongodb').ObjectID;
-        var url = 'mongodb://localhost:27017/hades';
-
         var add_vm_to_user = function (db, callback) {
             db.collection('users').update(
                 {"login": login},
@@ -61,7 +57,7 @@ export class DBManager
             });
         }
 
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(this.url, function(err, db) {
             assert.equal(null, err);
             add_vm_to_user(db, function() {
                 db.close();
@@ -69,5 +65,34 @@ export class DBManager
         });
     }
 
+
+    public  async getTypeOfUser(userlogin : string) : Promise<string>
+    {
+
+        var functiongetuserType = async function(db)
+        {
+             var res = await db.collection('users').findOne({"login":userlogin});
+             return res;
+        }
+
+        var db = await MongoClient.connect(this.url);
+        var result =  await functiongetuserType(db);
+        return result.typeofUser;
+    }
+
+    public async countUserNbVM(userlogin:string) :  Promise<number>
+    {
+        var getListVm = async function(db)
+        {
+            var res =  await db.collection('users').count({"login":userlogin});
+              //console.log("------------------------",typeof(res.owned_vms));
+            return res;
+        }
+
+        var db = await MongoClient.connect(this.url);
+        var NbVM =  await getListVm(db);
+        //console.log("------------------------",typeof(PromisNbVM));
+        return NbVM;
+    }
    
 }
