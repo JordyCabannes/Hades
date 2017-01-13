@@ -40,6 +40,7 @@ export class DBManager
             "date_joined": new Date(),
             "last_billed": new Date(),
             "owned_vms": []
+            //"node"
         };
         this.insert_mongodb('users', data);
     }

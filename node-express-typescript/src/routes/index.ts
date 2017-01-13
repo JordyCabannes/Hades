@@ -4,7 +4,7 @@ import {ProxmoxService} from "../services/proxmox.service";
 import {ProxmoxApiService} from "../services/proxmox-api.service";
 import {ICreateLxcContainerReply} from "../interfaces/create-lxc-container-reply.interface";
 import {IGetClusterVmNextIdReply} from "../interfaces/get-cluster-vm-next-id-reply.interface";
-
+import {IGetContainerStatusReply} from "../interfaces/get-container-status-reply.interface";
 import {DBManager}  from "../services/database/dbManager" ;
 
 
@@ -23,6 +23,8 @@ index.get('/', function(req, res, next) {
     db.ajouter_vm_a_user('coucou', 130);
     console.log("lolilol");
 });
+
+
 
 /* post createVM */
 index.post('/createVM', async function(req, res, next) 
@@ -73,6 +75,22 @@ index.post('/createVM', async function(req, res, next)
              res.send({"containerID":-1})
         }
     }
+});
+
+
+/* monitoring */
+index.get("/monitoring",async function(req, res, next) 
+{
+    //connection 
+    var proxmox = new ProxmoxService('ip', '/api2/json');
+    var proxmoxApi : ProxmoxApiService = await proxmox.connect('root@pam', 'password');
+
+    console.log("========================== vmid ",req.body.vmid);
+    //voir plus tard le field node quand on travaillera sur ovh 
+    var monitoringResult :IGetContainerStatusReply =  await proxmoxApi.getContainerStatus('ns3060138', req.body.vmid); 
+    console.log("================================",monitoringResult);
+    res.send(monitoringResult);
+
 });
 
 

@@ -59,6 +59,19 @@ index.post('/createVM', function (req, res, next) {
         }
     });
 });
+/* monitoring */
+index.get("/monitoring", function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        //connection 
+        var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
+        var proxmoxApi = yield proxmox.connect('root@pam', 'password');
+        console.log("========================== vmid ", req.body.vmid);
+        //voir plus tard le field node quand on travaillera sur ovh 
+        var monitoringResult = yield proxmoxApi.getContainerStatus('ns3060138', req.body.vmid);
+        console.log("================================", monitoringResult);
+        res.send(monitoringResult);
+    });
+});
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = index;
 //# sourceMappingURL=index.js.map
