@@ -17,6 +17,5 @@ export interface ICreateContainerBackupRequest {
     vmid : number,
     storage : string,
     compress : BackupCompress,
-    mode : string,
-    starttime : string
+    mode : string
 }

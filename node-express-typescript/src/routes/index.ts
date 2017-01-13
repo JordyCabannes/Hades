@@ -7,12 +7,59 @@ import {IGetClusterVmNextIdReply} from "../interfaces/get-cluster-vm-next-id-rep
 import {IGetContainerStatusReply} from "../interfaces/get-container-status-reply.interface";
 import {DBManager}  from "../services/database/dbManager" ;
 
+var proxApi : ProxmoxApiService = null;
+async function getPromoxApi() : Promise<ProxmoxApiService> //TODO:gérer le cas où le token n'est plus valide car il a expiré
+{
+    if(proxApi == null)
+    {
+        var proxmox = new ProxmoxService('ip', '/api2/json');
+        proxApi= await proxmox.connect('root@pam', 'password');
+    }
+    return proxApi;
+}
 
 const index = Router();
 
 /*db Manager*/
 var db= new DBManager();
 
+
+
+ /* var proxmoxApi = getPromoxApi();
+ if(proxmoxApi != null) {
+
+
+ /*var cNextVmId = await proxmoxApi.getClusterVmNextId();
+ var container : ICreateLxcContainerRequest = {
+ ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+ vmid : cNextVmId.id,
+ password : 'rootroot',
+ memory:1024
+ }*/
+
+//var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer('ns3060138', container);
+
+//console.log(result);
+
+/*var a = {
+ vmid : 100,
+ storage : 'backups',
+ compress : BackupCompress.LZO,
+ mode : BackupModes.SNAPSHOT
+ }
+ */
+/*var d = {
+ vmid : 100,
+ ostemplate:'/custom/backups/dump/vzdump-lxc-102-2017_01_12-22_43_28.tar.lzo'
+ }
+
+ //var b = await proxmoxApi.createContainerBackup('ns3060138', a);
+ var c = await proxmoxApi.restoreLxcContainer('ns3060138', d);
+ console.log(c);
+ //console.log(b);
+
+ console.log();
+ }*/
 
 
 /* GET home page. */
@@ -31,9 +78,8 @@ index.post('/createVM', async function(req, res, next)
 {
     console.log("request body" + req.body);
 
-    //connection 
-    var proxmox = new ProxmoxService('ip', '/api2/json');
-    var proxmoxApi : ProxmoxApiService = await proxmox.connect('root@pam', 'password');
+    //connection
+    var proxmoxApi : ProxmoxApiService = await getPromoxApi();
 
     //free or premium
     var typeUser = await db.getTypeOfUser("coucou");
@@ -81,9 +127,8 @@ index.post('/createVM', async function(req, res, next)
 /* monitoring */
 index.get("/monitoring",async function(req, res, next) 
 {
-    //connection 
-    var proxmox = new ProxmoxService('ip', '/api2/json');
-    var proxmoxApi : ProxmoxApiService = await proxmox.connect('root@pam', 'password');
+    //connection
+    var proxmoxApi : ProxmoxApiService = await getPromoxApi();
 
     console.log("========================== vmid ",req.body.vmid);
     //voir plus tard le field node quand on travaillera sur ovh 

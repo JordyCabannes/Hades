@@ -3,13 +3,14 @@
  */
 "use strict";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //desactive la verification de certificat en https
+var requestify = require('requestify');
 class HttpService {
     constructor(endpoint, permanentHeaders, permanentCookie) {
         this.errorHandler = function (error) {
             console.error('\n/!\\ ERROR: \n', error, '\n/!\\ ERROR: \n');
             return error; //null = valeur prise par le retour de la promise si il y a une erreur lors de la requete http
         };
-        this.httpClient = require('requestify');
+        this.httpClient = requestify;
         this.endpoint = endpoint;
         this.permanentHeaders = permanentHeaders;
         this.permanentCookie = permanentCookie;

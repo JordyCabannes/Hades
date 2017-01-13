@@ -33,6 +33,7 @@ export class ProxmoxService
 
         var body = response.getBody();
         var proxmoxApi = new ProxmoxApiService(this.endpoint, {PVEAuthCookie: body['data']['ticket']}, body['data']['CSRFPreventionToken'])
+
         return proxmoxApi;
     }
 }

@@ -2,17 +2,59 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+        step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-const express_1 = require("express");
+const express_1 = require('express');
 const proxmox_service_1 = require("../services/proxmox.service");
 const dbManager_1 = require("../services/database/dbManager");
+var proxApi = null;
+function getPromoxApi() {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (proxApi == null) {
+            var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
+            proxApi = yield proxmox.connect('root@pam', 'password');
+        }
+        return proxApi;
+    });
+}
 const index = express_1.Router();
 /*db Manager*/
 var db = new dbManager_1.DBManager();
+/* var proxmoxApi = getPromoxApi();
+if(proxmoxApi != null) {
+
+
+/*var cNextVmId = await proxmoxApi.getClusterVmNextId();
+var container : ICreateLxcContainerRequest = {
+ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+vmid : cNextVmId.id,
+password : 'rootroot',
+memory:1024
+}*/
+//var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer('ns3060138', container);
+//console.log(result);
+/*var a = {
+ vmid : 100,
+ storage : 'backups',
+ compress : BackupCompress.LZO,
+ mode : BackupModes.SNAPSHOT
+ }
+ */
+/*var d = {
+ vmid : 100,
+ ostemplate:'/custom/backups/dump/vzdump-lxc-102-2017_01_12-22_43_28.tar.lzo'
+ }
+
+ //var b = await proxmoxApi.createContainerBackup('ns3060138', a);
+ var c = await proxmoxApi.restoreLxcContainer('ns3060138', d);
+ console.log(c);
+ //console.log(b);
+
+ console.log();
+ }*/
 /* GET home page. */
 index.get('/', function (req, res, next) {
     // ajouter_user('coucou', 'blah', UserClass.Free)
@@ -24,9 +66,8 @@ index.get('/', function (req, res, next) {
 index.post('/createVM', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("request body" + req.body);
-        //connection 
-        var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
-        var proxmoxApi = yield proxmox.connect('root@pam', 'password');
+        //connection
+        var proxmoxApi = yield getPromoxApi();
         //free or premium
         var typeUser = yield db.getTypeOfUser("coucou");
         var numberVM = yield db.countUserNbVM("coucou");
@@ -62,9 +103,8 @@ index.post('/createVM', function (req, res, next) {
 /* monitoring */
 index.get("/monitoring", function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        //connection 
-        var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
-        var proxmoxApi = yield proxmox.connect('root@pam', 'password');
+        //connection
+        var proxmoxApi = yield getPromoxApi();
         console.log("========================== vmid ", req.body.vmid);
         //voir plus tard le field node quand on travaillera sur ovh 
         var monitoringResult = yield proxmoxApi.getContainerStatus('ns3060138', req.body.vmid);
