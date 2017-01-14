@@ -59,5 +59,6 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
+    console.log("Listening on port : " + bind);
 }
 //# sourceMappingURL=www.js.map

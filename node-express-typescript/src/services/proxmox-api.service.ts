@@ -33,6 +33,7 @@ export class ProxmoxApiService
         this.httpService = new HttpService(this.endpoint, httpheaders, this.ticket);
     }
 
+    /*vm doit être éteinte pour pouvoir faire la backup*/
     public async restoreLxcContainer(node : string, restoreLxcContainerRequest : IRestoreLxcContainerRequest) : Promise<IRestoreLxcContainerReply>
     {
         var finalUrl = `/nodes/${node}/lxc`;
@@ -47,6 +48,7 @@ export class ProxmoxApiService
             upid : response.getBody()['data']
         };
     }
+
 
     public async createContainerBackup(node : string, createContainerBackupRequest : ICreateContainerBackupRequest) : Promise<ICreateContainerBackupReply>
     {

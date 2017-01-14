@@ -11,4 +11,10 @@
 * [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
 * [Markdown Syntax Reference](http://daringfireball.net)
 
+
+###Choses à dire dans le rapport 
+* Comment on a réussi à avoir un shell, et les limites qui sont dû à l'api elle-même.
+*Le fait que théoriquement on peut faire plusieurs backup, mais qu'on l'a pas mis en place pour cause de temps.
+
+
 ** Enjoy!**

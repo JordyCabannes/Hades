@@ -33,7 +33,8 @@ export class DBManager
 
     public ajouter_user(login: string, password: string, userType: string)
     {
-        var data = {
+        var data = 
+        {
             "login": login,
             "password": password,
             "typeofUser": userType,
@@ -94,6 +95,17 @@ export class DBManager
         var NbVM =  await getListVm(db);
         //console.log("------------------------",typeof(PromisNbVM));
         return NbVM;
+    }
+
+    public associateVmBackupToAnUser(login: string,vmid:number,backupPath:string)
+    {
+        var data = 
+        {
+            "login": login,
+            "vmid":vmid,
+            "backupPath":backupPath
+        };
+        this.insert_mongodb('backup', data);
     }
    
 }
