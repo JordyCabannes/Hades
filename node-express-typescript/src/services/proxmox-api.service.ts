@@ -1,14 +1,13 @@
 
 import {HttpService} from "./http.service";
 import {ICreateLxcContainerRequest} from "../interfaces/create-lxc-container-request.interface";
-import {ICreateLxcContainerReply} from "../interfaces/create-lxc-container-reply.interface";
 import {IGetClusterVmNextIdReply} from "../interfaces/get-cluster-vm-next-id-reply.interface";
 import {IGetContainerStatusReply} from "../interfaces/get-container-status-reply.interface";
 import {ICreateContainerBackupRequest} from "../interfaces/create-container-backup-request";
 import {ICreateContainerBackupReply} from "../interfaces/create-container-backup-reply.interface";
 import {IRestoreLxcContainerRequest} from "../interfaces/restore-lxc-container-request.interface";
-import {IRestoreLxcContainerReply} from "../interfaces/restore-lxc-container-reply.interface";
 import {ProxmoxApiUtils} from "../utils/proxmox-api.utils";
+import {IUpidReply} from "../interfaces/upid-reply.interface";
 
 /**
  * Created by Halim on 09/01/2017.
@@ -35,7 +34,7 @@ export class ProxmoxApiService
         this.httpService = new HttpService(this.endpoint, httpheaders, this.ticket);
     }
 
-    public async restoreLxcContainer(node : string, restoreLxcContainerRequest : IRestoreLxcContainerRequest) : Promise<IRestoreLxcContainerReply>
+    public async restoreLxcContainer(node : string, restoreLxcContainerRequest : IRestoreLxcContainerRequest) : Promise<IUpidReply>
     {
         var finalUrl = `/nodes/${node}/lxc`;
         restoreLxcContainerRequest['restore'] = 1;
@@ -107,7 +106,46 @@ export class ProxmoxApiService
         }
     }
 
-    public async createLxcContainer(node : string, lxcContainerRequest : ICreateLxcContainerRequest) : Promise<ICreateLxcContainerReply>
+    public async startLxcContainer(node : string, vmid : number) : Promise<IUpidReply>
+    {
+        var finalUrl = `/nodes/${node}/lxc/${vmid}/status/start`;
+        var response = await this.httpService.post(finalUrl, {});
+
+        if(response.code != 200)
+            return null;
+
+        return {
+            upid : response.getBody()['data']
+        };
+    }
+
+    public async stopLxcContainer(node : string, vmid : number) : Promise<IUpidReply>
+    {
+        var finalUrl = `/nodes/${node}/lxc/${vmid}/status/stop`;
+        var response = await this.httpService.post(finalUrl, {});
+
+        if(response.code != 200)
+            return null;
+
+        return {
+            upid : response.getBody()['data']
+        };
+    }
+
+    public async shutdownLxcContainer(node : string, vmid : number) : Promise<IUpidReply>
+    {
+        var finalUrl = `/nodes/${node}/lxc/${vmid}/status/shutdown`;
+        var response = await this.httpService.post(finalUrl, {});
+
+        if(response.code != 200)
+            return null;
+
+        return {
+            upid : response.getBody()['data']
+        };
+    }
+
+    public async createLxcContainer(node : string, lxcContainerRequest : ICreateLxcContainerRequest) : Promise<IUpidReply>
     {
         var finalUrl = `/nodes/${node}/lxc`;
         var response = await this.httpService.post(finalUrl, lxcContainerRequest);

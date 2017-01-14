@@ -11,8 +11,8 @@ export class ProxmoxUtils {
     {
         if(ProxmoxUtils.proxApi == null)
         {
-            var proxmox = new ProxmoxService('ip', '/api2/json');
-            ProxmoxUtils.proxApi= await proxmox.connect('root@pam', 'password');
+            var proxmox = new ProxmoxService('213.32.27.237', '/api2/json');
+            ProxmoxUtils.proxApi= await proxmox.connect('root@pam', 'kpuJD5RuWP57');
         }
         return ProxmoxUtils.proxApi;
     }

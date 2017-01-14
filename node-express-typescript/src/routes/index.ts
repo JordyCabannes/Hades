@@ -2,14 +2,13 @@ import {Router} from 'express';
 import {ICreateLxcContainerRequest} from "../interfaces/create-lxc-container-request.interface";
 import {ProxmoxService} from "../services/proxmox.service";
 import {ProxmoxApiService} from "../services/proxmox-api.service";
-import {ICreateLxcContainerReply} from "../interfaces/create-lxc-container-reply.interface";
 import {IGetClusterVmNextIdReply} from "../interfaces/get-cluster-vm-next-id-reply.interface";
 import {IGetContainerStatusReply} from "../interfaces/get-container-status-reply.interface";
 import {DBManager}  from "../services/database/dbManager" ;
 import {BackupCompress,BackupModes} from "../interfaces/create-container-backup-request";
-import {IRestoreLxcContainerReply} from "../interfaces/restore-lxc-container-reply.interface";
 import {FrameselfService} from "../services/frameself.service";
 import {ProxmoxUtils} from "../utils/proxmox.utils";
+import {IUpidReply} from "../interfaces/upid-reply.interface";
 
 var frameself = new FrameselfService('127.0.0.1', 5000);
 const index = Router();
@@ -61,7 +60,7 @@ index.post('/createVM', async function(req, res, next)
             }
             
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer('ns3060138',container);
+            var result : IUpidReply = await proxmoxApi.createLxcContainer('ns3060138',container);
             if (result==null)
             {
                 res.send({"containerID":-1,"Information":"Fail create vm"})
@@ -127,7 +126,7 @@ index.post("/createBackup", async function(req, res, next)
         }
 
         //TODO : voir plus tard le field node quand on travaillera sur ovh
-        var createBackupResult : ICreateLxcContainerReply = await proxmoxApi.createContainerBackup('ns3060138', backupRequest);
+        var createBackupResult : IUpidReply = await proxmoxApi.createContainerBackup('ns3060138', backupRequest);
         if (createBackupResult==null)
         {
             res.send({"Information":"Fail create backup"});
@@ -162,7 +161,7 @@ index.post("/restoreBackup", async function(req, res, next)
         if(resHasBackup)
         {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var restoreLxcContainerResult : IRestoreLxcContainerReply  = await  proxmoxApi.restoreLxcContainer('ns3060138', restoreLxcContainer) ; 
+            var restoreLxcContainerResult : IUpidReply  = await  proxmoxApi.restoreLxcContainer('ns3060138', restoreLxcContainer) ;
             if (restoreLxcContainerResult!=null)
             {
                 res.send({"Information":"ok"});
@@ -181,6 +180,7 @@ index.post("/restoreBackup", async function(req, res, next)
 index.get("/testFrameself",async function(req, res, next)
 {
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
+    //proxmoxApi.shutdownLxcContainer('ns3060138', 111);
     var ObjectID  :IGetClusterVmNextIdReply  = await proxmoxApi.getClusterVmNextId() ;
     var container : ICreateLxcContainerRequest =
         {
