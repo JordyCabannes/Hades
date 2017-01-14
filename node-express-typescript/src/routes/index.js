@@ -15,8 +15,8 @@ var proxApi = null;
 function getPromoxApi() {
     return __awaiter(this, void 0, void 0, function* () {
         if (proxApi == null) {
-            var proxmox = new proxmox_service_1.ProxmoxService('213.32.27.237', '/api2/json');
-            proxApi = yield proxmox.connect('root@pam', 'dshTYjUrW6CA');
+            var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
+            proxApi = yield proxmox.connect('root@pam', 'password');
         }
         return proxApi;
     });
@@ -24,42 +24,11 @@ function getPromoxApi() {
 const index = express_1.Router();
 /*db Manager*/
 var db = new dbManager_1.DBManager();
-/* var proxmoxApi = getPromoxApi();
-if(proxmoxApi != null) {
-
-
-/*var cNextVmId = await proxmoxApi.getClusterVmNextId();
-var container : ICreateLxcContainerRequest = {
-ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-vmid : cNextVmId.id,
-password : 'rootroot',
-memory:1024
-}*/
-//var result : ICreateLxcContainerReply = await proxmoxApi.createLxcContainer('ns3060138', container);
-//console.log(result);
-/*var a = {
- vmid : 100,
- storage : 'backups',
- compress : BackupCompress.LZO,
- mode : BackupModes.SNAPSHOT
- }
- */
-/*var d = {
- vmid : 100,
- ostemplate:'/custom/backups/dump/vzdump-lxc-102-2017_01_12-22_43_28.tar.lzo'
- }
-
- //var b = await proxmoxApi.createContainerBackup('ns3060138', a);
- var c = await proxmoxApi.restoreLxcContainer('ns3060138', d);
- console.log(c);
- //console.log(b);
-
- console.log();
- }*/
 /* GET home page. */
 index.get('/', function (req, res, next) {
     db.ajouter_user("coucou", "prout", "Free");
     db.ajouter_vm_a_user('coucou', 130);
+    db.associateVmBackupToAnUser("coucou", 130, "/home/zaurelezo");
     console.log("lolilol");
 });
 /* post createVM */
@@ -148,6 +117,36 @@ index.post("/createBackup", function (req, res, next) {
                 //sauvegarde de la backup dans la bdd
                 db.associateVmBackupToAnUser(req.body.login, req.body.vmid, createBackupResult[" backup"]);
                 res.send({ "Information": "ok" });
+            }
+        }
+    });
+});
+/*restore backup
+TODO: vm doit être éteinte pour pouvoir faire la backup*/
+index.post("/restoreBackup", function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var proxmoxApi = yield getPromoxApi();
+        if (proxmoxApi == null) {
+            res.send({ "Information": "Fail connection server" });
+        }
+        else {
+            var restoreLxcContainer = {
+                vmid: 100,
+                ostemplate: '/custom/backups/dump/vzdump-lxc-102-2017_01_12-22_43_28.tar.lzo'
+            };
+            var resHasBackup = yield db.hasBackupAssociateWithVm("coucou", 130);
+            if (resHasBackup) {
+                //TODO : voir plus tard le field node quand on travaillera sur ovh
+                var restoreLxcContainerResult = yield proxmoxApi.restoreLxcContainer('ns3060138', restoreLxcContainer);
+                if (restoreLxcContainerResult != null) {
+                    res.send({ "Information": "ok" });
+                }
+                else {
+                    res.send({ "Information": "Fail to restore" });
+                }
+            }
+            else {
+                res.send({ "Information": "Need to have a backup if want to restore" });
             }
         }
     });

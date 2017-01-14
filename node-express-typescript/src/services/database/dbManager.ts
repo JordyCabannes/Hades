@@ -97,7 +97,8 @@ export class DBManager
         return NbVM;
     }
 
-    public associateVmBackupToAnUser(login: string,vmid:number,backupPath:string)
+    /*permetd'ajouter dans la collection backup, la chemin de la backup de la vm créée par l'utilisateur login*/
+    public  associateVmBackupToAnUser(login: string,vmid:number,backupPath:string)
     {
         var data = 
         {
@@ -106,6 +107,20 @@ export class DBManager
             "backupPath":backupPath
         };
         this.insert_mongodb('backup', data);
+    }
+
+    /*permet de savoir si l'utilisateur avait créé une backup pour la vm vmid*/
+    public async hasBackupAssociateWithVm(login: string,vmid:number) : Promise <boolean>
+    {
+        var functionhasBackup = async function(db)
+        {
+             var res = await db.collection('backup').count({"login":login,"vmid":vmid});
+             return res;
+        }
+
+        var db = await MongoClient.connect(this.url);
+        var result =  await functionhasBackup(db);
+        return result==1;
     }
    
 }

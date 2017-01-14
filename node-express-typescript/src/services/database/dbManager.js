@@ -84,6 +84,7 @@ class DBManager {
             return NbVM;
         });
     }
+    /*permetd'ajouter dans la collection backup, la chemin de la backup de la vm créée par l'utilisateur login*/
     associateVmBackupToAnUser(login, vmid, backupPath) {
         var data = {
             "login": login,
@@ -91,6 +92,20 @@ class DBManager {
             "backupPath": backupPath
         };
         this.insert_mongodb('backup', data);
+    }
+    /*permet de savoir si l'utilisateur avait créé une backup pour la vm vmid*/
+    hasBackupAssociateWithVm(login, vmid) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var functionhasBackup = function (db) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    var res = yield db.collection('backup').count({ "login": login, "vmid": vmid });
+                    return res;
+                });
+            };
+            var db = yield MongoClient.connect(this.url);
+            var result = yield functionhasBackup(db);
+            return result == 1;
+        });
     }
 }
 exports.DBManager = DBManager;
