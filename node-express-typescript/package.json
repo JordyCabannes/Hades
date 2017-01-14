@@ -18,7 +18,8 @@
     "serve-favicon": "~2.2.0",
     "mongodb": "~2.0",
     "kerberos" : "~0.0",
-    "requestify" : "~0.2.5"
+    "requestify" : "~0.2.5",
+    "dgram" : "~1.0.1"
   },
   "devDependencies": {
     "browser-sync": "^2.8.2",

@@ -1,6 +1,7 @@
 import app from './app';
 import debugModule = require('debug');
 import http = require('http');
+import {FrameselfDispatcher} from "./routes/frameself-dispatcher";
 
 const debug = debugModule('node-express-typescript:server');
 
@@ -15,25 +16,6 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /**
- * Normalize a port into a number, string, or false.
- */
-function normalizePort(val: any): number|string|boolean {
-  let port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
-
-/**
  * Event listener for HTTP server "error" event.
  */
 function onError(error) {
@@ -42,8 +24,8 @@ function onError(error) {
   }
 
   let bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port
+      ? 'Pipe ' + port
+      : 'Port ' + port
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -66,9 +48,11 @@ function onError(error) {
 function onListening() {
   let addr = server.address();
   let bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
 
   debug('Listening on ' + bind);
-  console.log("Listening on port : " + bind);
 }
+
+const frameselfServer = new FrameselfDispatcher('127.0.0.1', 6000, 7000);
+frameselfServer.startServer();

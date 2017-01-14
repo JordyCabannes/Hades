@@ -8,18 +8,10 @@ import {IGetContainerStatusReply} from "../interfaces/get-container-status-reply
 import {DBManager}  from "../services/database/dbManager" ;
 import {BackupCompress,BackupModes} from "../interfaces/create-container-backup-request";
 import {IRestoreLxcContainerReply} from "../interfaces/restore-lxc-container-reply.interface";
+import {FrameselfService} from "../services/frameself.service";
+import {ProxmoxUtils} from "../utils/proxmox.utils";
 
-var proxApi : ProxmoxApiService = null;
-async function getPromoxApi() : Promise<ProxmoxApiService> //TODO:gérer le cas où le token n'est plus valide car il a expiré
-{
-    if(proxApi == null)
-    {
-        var proxmox = new ProxmoxService('ip', '/api2/json');
-        proxApi= await proxmox.connect('root@pam', 'password');
-    }
-    return proxApi;
-}
-
+var frameself = new FrameselfService('127.0.0.1', 5000);
 const index = Router();
 
 /*db Manager*/
@@ -42,7 +34,7 @@ index.post('/createVM', async function(req, res, next)
 {
     console.log("request body" + req.body);
     //connection
-    var proxmoxApi : ProxmoxApiService = await getPromoxApi();
+    var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
 
     //free or premium
     var typeUser = await db.getTypeOfUser("coucou");
@@ -92,7 +84,7 @@ index.post('/createVM', async function(req, res, next)
 index.get("/monitoring/:vmid",async function(req, res, next) 
 {
     //connection
-    var proxmoxApi : ProxmoxApiService = await getPromoxApi();
+    var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
     if (proxmoxApi!=null)
     {
         //TODO : voir plus tard le field node quand on travaillera sur ovh
@@ -119,7 +111,7 @@ théoriquement on peu plusieurs backups, mais on va se limiter à une backup pou
 index.post("/createBackup", async function(req, res, next) 
 {
     //connection
-    var proxmoxApi : ProxmoxApiService = await getPromoxApi();
+    var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
 
     if (proxmoxApi==null)
     {
@@ -153,7 +145,7 @@ index.post("/createBackup", async function(req, res, next)
 TODO: vm doit être éteinte pour pouvoir faire la backup*/
 index.post("/restoreBackup", async function(req, res, next)  
 {
-    var proxmoxApi : ProxmoxApiService = await getPromoxApi();
+    var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
 
     if (proxmoxApi==null)
     {
@@ -184,6 +176,20 @@ index.post("/restoreBackup", async function(req, res, next)
             res.send({"Information":"Need to have a backup if want to restore"});
         }
     }
+});
+
+index.get("/testFrameself",async function(req, res, next)
+{
+    var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
+    var ObjectID  :IGetClusterVmNextIdReply  = await proxmoxApi.getClusterVmNextId() ;
+    var container : ICreateLxcContainerRequest =
+        {
+            ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+            vmid : ObjectID.id,
+            password : 'rototoroot',
+            memory:1024,
+        }
+    frameself.reportCreateLxcContainer('ns3060138', container);
 });
 
 

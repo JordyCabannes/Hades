@@ -2,6 +2,7 @@
 const app_1 = require("./app");
 const debugModule = require("debug");
 const http = require("http");
+const frameself_dispatcher_1 = require("./routes/frameself-dispatcher");
 const debug = debugModule('node-express-typescript:server');
 // Get port from environment and store in Express.
 const port = 3001;
@@ -11,21 +12,6 @@ const server = http.createServer(app_1.default);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-/**
- * Normalize a port into a number, string, or false.
- */
-function normalizePort(val) {
-    let port = parseInt(val, 10);
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-    return false;
-}
 /**
  * Event listener for HTTP server "error" event.
  */
@@ -59,6 +45,7 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
-    console.log("Listening on port : " + bind);
 }
+const frameselfServer = new frameself_dispatcher_1.FrameselfDispatcher('127.0.0.1', 6000, 7000);
+frameselfServer.startServer();
 //# sourceMappingURL=www.js.map

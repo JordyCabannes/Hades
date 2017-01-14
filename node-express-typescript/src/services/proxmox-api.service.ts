@@ -1,3 +1,4 @@
+
 import {HttpService} from "./http.service";
 import {ICreateLxcContainerRequest} from "../interfaces/create-lxc-container-request.interface";
 import {ICreateLxcContainerReply} from "../interfaces/create-lxc-container-reply.interface";
@@ -7,6 +8,7 @@ import {ICreateContainerBackupRequest} from "../interfaces/create-container-back
 import {ICreateContainerBackupReply} from "../interfaces/create-container-backup-reply.interface";
 import {IRestoreLxcContainerRequest} from "../interfaces/restore-lxc-container-request.interface";
 import {IRestoreLxcContainerReply} from "../interfaces/restore-lxc-container-reply.interface";
+import {ProxmoxApiUtils} from "../utils/proxmox-api.utils";
 
 /**
  * Created by Halim on 09/01/2017.
@@ -33,7 +35,6 @@ export class ProxmoxApiService
         this.httpService = new HttpService(this.endpoint, httpheaders, this.ticket);
     }
 
-    /*vm doit être éteinte pour pouvoir faire la backup*/
     public async restoreLxcContainer(node : string, restoreLxcContainerRequest : IRestoreLxcContainerRequest) : Promise<IRestoreLxcContainerReply>
     {
         var finalUrl = `/nodes/${node}/lxc`;
@@ -49,7 +50,6 @@ export class ProxmoxApiService
         };
     }
 
-
     public async createContainerBackup(node : string, createContainerBackupRequest : ICreateContainerBackupRequest) : Promise<ICreateContainerBackupReply>
     {
         var finalUrl = `/nodes/${node}/vzdump`;
@@ -59,19 +59,19 @@ export class ProxmoxApiService
             return null;
 
         var upid : string = response.getBody()['data'];
-        var iBegin = nth_occurrence(upid, ':', 4) + 1;
-        var iEnd = nth_occurrence(upid, ':', 5);
+        var iBegin = ProxmoxApiUtils.nth_occurrence(upid, ':', 4) + 1;
+        var iEnd = ProxmoxApiUtils.nth_occurrence(upid, ':', 5);
         var hexTimestamp = upid.substring(iBegin, iEnd);
         var timestamp = parseInt(hexTimestamp, 16);
         var date = new Date(timestamp*1000);
         var vmid = createContainerBackupRequest.vmid;
         var storage = createContainerBackupRequest.storage;
-        var year = leftPad(date.getUTCFullYear(), 4);
-        var month = leftPad(date.getUTCMonth() + 1, 2);
-        var day = leftPad(date.getUTCDate(), 2);
-        var hours = leftPad(date.getHours(), 2);
-        var minutes = leftPad(date.getMinutes(), 2);
-        var seconds = leftPad(date.getSeconds(), 2);
+        var year = ProxmoxApiUtils.leftPad(date.getUTCFullYear(), 4);
+        var month = ProxmoxApiUtils.leftPad(date.getUTCMonth() + 1, 2);
+        var day = ProxmoxApiUtils.leftPad(date.getUTCDate(), 2);
+        var hours = ProxmoxApiUtils.leftPad(date.getHours(), 2);
+        var minutes = ProxmoxApiUtils.leftPad(date.getMinutes(), 2);
+        var seconds = ProxmoxApiUtils.leftPad(date.getSeconds(), 2);
 
         var backup = `/custom/backups/dump/vzdump-lxc-${vmid}-${year}_${month}_${day}-${hours}_${minutes}_${seconds}.tar.lzo`;
         return {
@@ -119,30 +119,4 @@ export class ProxmoxApiService
             upid : response.getBody()['data']
         };
     }
-}
-
-function nth_occurrence (string, char, nth) {
-    var first_index = string.indexOf(char);
-    var length_up_to_first_index = first_index + 1;
-
-    if (nth == 1) {
-        return first_index;
-    } else {
-        var string_after_first_occurrence = string.slice(length_up_to_first_index);
-        var next_occurrence = nth_occurrence(string_after_first_occurrence, char, nth - 1);
-
-        if (next_occurrence === -1) {
-            return -1;
-        } else {
-            return length_up_to_first_index + next_occurrence;
-        }
-    }
-}
-
-function leftPad(number, targetLength) {
-    var output = number + '';
-    while (output.length < targetLength) {
-        output = '0' + output;
-    }
-    return output;
 }

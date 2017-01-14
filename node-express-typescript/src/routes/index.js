@@ -8,19 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const express_1 = require("express");
-const proxmox_service_1 = require("../services/proxmox.service");
 const dbManager_1 = require("../services/database/dbManager");
 const create_container_backup_request_1 = require("../interfaces/create-container-backup-request");
-var proxApi = null;
-function getPromoxApi() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (proxApi == null) {
-            var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
-            proxApi = yield proxmox.connect('root@pam', 'password');
-        }
-        return proxApi;
-    });
-}
+const frameself_service_1 = require("../services/frameself.service");
+const proxmox_utils_1 = require("../utils/proxmox.utils");
+var frameself = new frameself_service_1.FrameselfService('127.0.0.1', 5000);
 const index = express_1.Router();
 /*db Manager*/
 var db = new dbManager_1.DBManager();
@@ -36,7 +28,7 @@ index.post('/createVM', function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("request body" + req.body);
         //connection
-        var proxmoxApi = yield getPromoxApi();
+        var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         //free or premium
         var typeUser = yield db.getTypeOfUser("coucou");
         var numberVM = yield db.countUserNbVM("coucou");
@@ -75,7 +67,7 @@ index.post('/createVM', function (req, res, next) {
 index.get("/monitoring/:vmid", function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         //connection
-        var proxmoxApi = yield getPromoxApi();
+        var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         if (proxmoxApi != null) {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
             var monitoringResult = yield proxmoxApi.getContainerStatus('ns3060138', req.params.vmid);
@@ -97,7 +89,7 @@ théoriquement on peu plusieurs backups, mais on va se limiter à une backup pou
 index.post("/createBackup", function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         //connection
-        var proxmoxApi = yield getPromoxApi();
+        var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         if (proxmoxApi == null) {
             res.send({ "Information": "Fail connection server" });
         }
@@ -125,7 +117,7 @@ index.post("/createBackup", function (req, res, next) {
 TODO: vm doit être éteinte pour pouvoir faire la backup*/
 index.post("/restoreBackup", function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        var proxmoxApi = yield getPromoxApi();
+        var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         if (proxmoxApi == null) {
             res.send({ "Information": "Fail connection server" });
         }
@@ -149,6 +141,19 @@ index.post("/restoreBackup", function (req, res, next) {
                 res.send({ "Information": "Need to have a backup if want to restore" });
             }
         }
+    });
+});
+index.get("/testFrameself", function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
+        var ObjectID = yield proxmoxApi.getClusterVmNextId();
+        var container = {
+            ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+            vmid: ObjectID.id,
+            password: 'rototoroot',
+            memory: 1024,
+        };
+        frameself.reportCreateLxcContainer('ns3060138', container);
     });
 });
 Object.defineProperty(exports, "__esModule", { value: true });
