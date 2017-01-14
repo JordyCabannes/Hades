@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const http_service_1 = require("./http.service");
+const create_container_backup_request_1 = require("../interfaces/create-container-backup-request");
 const proxmox_api_utils_1 = require("../utils/proxmox-api.utils");
 /**
  * Created by Halim on 09/01/2017.
@@ -36,9 +37,15 @@ class ProxmoxApiService {
             };
         });
     }
-    createContainerBackup(node, createContainerBackupRequest) {
+    createContainerBackup(node, vmid) {
         return __awaiter(this, void 0, void 0, function* () {
             var finalUrl = `/nodes/${node}/vzdump`;
+            var createContainerBackupRequest = {
+                vmid: vmid,
+                storage: 'backups',
+                compress: create_container_backup_request_1.BackupCompress.LZO,
+                mode: create_container_backup_request_1.BackupModes.SNAPSHOT
+            };
             var response = yield this.httpService.post(finalUrl, createContainerBackupRequest);
             if (response.code != 200)
                 return null;
@@ -48,8 +55,6 @@ class ProxmoxApiService {
             var hexTimestamp = upid.substring(iBegin, iEnd);
             var timestamp = parseInt(hexTimestamp, 16);
             var date = new Date(timestamp * 1000);
-            var vmid = createContainerBackupRequest.vmid;
-            var storage = createContainerBackupRequest.storage;
             var year = proxmox_api_utils_1.ProxmoxApiUtils.leftPad(date.getUTCFullYear(), 4);
             var month = proxmox_api_utils_1.ProxmoxApiUtils.leftPad(date.getUTCMonth() + 1, 2);
             var day = proxmox_api_utils_1.ProxmoxApiUtils.leftPad(date.getUTCDate(), 2);

@@ -3,7 +3,10 @@ import {HttpService} from "./http.service";
 import {ICreateLxcContainerRequest} from "../interfaces/create-lxc-container-request.interface";
 import {IGetClusterVmNextIdReply} from "../interfaces/get-cluster-vm-next-id-reply.interface";
 import {IGetContainerStatusReply} from "../interfaces/get-container-status-reply.interface";
-import {ICreateContainerBackupRequest} from "../interfaces/create-container-backup-request";
+import {
+    ICreateContainerBackupRequest, BackupCompress,
+    BackupModes
+} from "../interfaces/create-container-backup-request";
 import {ICreateContainerBackupReply} from "../interfaces/create-container-backup-reply.interface";
 import {IRestoreLxcContainerRequest} from "../interfaces/restore-lxc-container-request.interface";
 import {ProxmoxApiUtils} from "../utils/proxmox-api.utils";
@@ -49,9 +52,17 @@ export class ProxmoxApiService
         };
     }
 
-    public async createContainerBackup(node : string, createContainerBackupRequest : ICreateContainerBackupRequest) : Promise<ICreateContainerBackupReply>
+    public async createContainerBackup(node : string, vmid:number) : Promise<ICreateContainerBackupReply>
     {
         var finalUrl = `/nodes/${node}/vzdump`;
+
+        var createContainerBackupRequest : ICreateContainerBackupRequest = {
+            vmid : vmid,
+            storage : 'backups',
+            compress : BackupCompress.LZO,
+            mode : BackupModes.SNAPSHOT
+        };
+
         var response = await this.httpService.post(finalUrl, createContainerBackupRequest);
 
         if(response.code != 200)
@@ -63,8 +74,6 @@ export class ProxmoxApiService
         var hexTimestamp = upid.substring(iBegin, iEnd);
         var timestamp = parseInt(hexTimestamp, 16);
         var date = new Date(timestamp*1000);
-        var vmid = createContainerBackupRequest.vmid;
-        var storage = createContainerBackupRequest.storage;
         var year = ProxmoxApiUtils.leftPad(date.getUTCFullYear(), 4);
         var month = ProxmoxApiUtils.leftPad(date.getUTCMonth() + 1, 2);
         var day = ProxmoxApiUtils.leftPad(date.getUTCDate(), 2);

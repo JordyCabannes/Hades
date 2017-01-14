@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const express_1 = require('express');
 const dbManager_1 = require("../services/database/dbManager");
-const create_container_backup_request_1 = require("../interfaces/create-container-backup-request");
 const frameself_service_1 = require("../services/frameself.service");
 const proxmox_utils_1 = require("../utils/proxmox.utils");
 var frameself = new frameself_service_1.FrameselfService('127.0.0.1', 5000);
@@ -94,14 +93,8 @@ index.post("/createBackup", function (req, res, next) {
             res.send({ "Information": "Fail connection server" });
         }
         else {
-            var backupRequest = {
-                vmid: req.body.vmid,
-                storage: 'backups',
-                compress: create_container_backup_request_1.BackupCompress.LZO,
-                mode: create_container_backup_request_1.BackupModes.SNAPSHOT
-            };
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var createBackupResult = yield proxmoxApi.createContainerBackup('ns3060138', backupRequest);
+            var createBackupResult = yield proxmoxApi.createContainerBackup('ns3060138', req.body.vmid);
             if (createBackupResult == null) {
                 res.send({ "Information": "Fail create backup" });
             }

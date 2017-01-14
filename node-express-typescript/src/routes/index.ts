@@ -117,16 +117,8 @@ index.post("/createBackup", async function(req, res, next)
         res.send({"Information":"Fail connection server"});
     }else
     {
-        var backupRequest = 
-        {
-            vmid : req.body.vmid,
-            storage : 'backups',
-            compress : BackupCompress.LZO,
-            mode : BackupModes.SNAPSHOT
-        }
-
         //TODO : voir plus tard le field node quand on travaillera sur ovh
-        var createBackupResult : IUpidReply = await proxmoxApi.createContainerBackup('ns3060138', backupRequest);
+        var createBackupResult : IUpidReply = await proxmoxApi.createContainerBackup('ns3060138', req.body.vmid);
         if (createBackupResult==null)
         {
             res.send({"Information":"Fail create backup"});
