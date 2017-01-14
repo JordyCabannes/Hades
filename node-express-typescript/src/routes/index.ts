@@ -13,8 +13,8 @@ async function getPromoxApi() : Promise<ProxmoxApiService> //TODO:gérer le cas 
 {
     if(proxApi == null)
     {
-        var proxmox = new ProxmoxService('213.32.27.237', '/api2/json');
-        proxApi= await proxmox.connect('root@pam', 'dshTYjUrW6CA');
+        var proxmox = new ProxmoxService('ip', '/api2/json');
+        proxApi= await proxmox.connect('root@pam', 'password');
     }
     return proxApi;
 }
