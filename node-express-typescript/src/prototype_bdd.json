@@ -1,26 +1,56 @@
 Etapes à suivre pour setup la BDD:
-- Ouvrir un terminal puis : 
-mongod --dbpath "src\mongo\data"
+- Ouvrir un terminal puis : (Windows/Linux)
+mongod --dbpath "mongo\data"
+mongod --dbpath "mongo/data"
 - Ouvrir un autre terminal puis :
 mongo
 - Normalement on est connecté à la BDD et on a un prompt. 
 use hades
 
 
+Setup BDD pour la première fois : 
+/*
 
-
-db.flavors.insert(
-  {
-    "xsmall": {"cpus": 1, "memory": 512, "disk": 10, "swap": 1024},
-    "small":  {"cpus": 1, "memory": 1024, "disk": 15, "swap": 1024},
-    "medium": {"cpus": 2, "memory": 2048, "disk": 20, "swap": 4096},
-    "large":  {"cpus": 2, "memory": 4096, "disk": 50, "swap": 8192},
-    "xlarge": {"cpus": 4, "memory": 8192, "disk": 100, "swap": 16384}
-  }
+db.allowed_flavors.insert(
+  [
+    {"name": "xsmall", "cpus": 1, "ram": 512, "disk": 10, "swap": 1024, "flavor_billing_rate": 0.018},
+    {"name": "small", "cpus": 1, "ram": 1024, "disk": 15, "swap": 1024, "flavor_billing_rate": 0.024},
+    {"name": "medium", "cpus": 2, "ram": 2048, "disk": 20, "swap": 4096, "flavor_billing_rate": 0.068},
+    {"name": "large", "cpus": 2, "ram": 4096, "disk": 50, "swap": 8192, "flavor_billing_rate": 0.176},
+    {"name": "xlarge", "cpus": 4, "ram": 8192, "disk": 100, "swap": 16384, "flavor_billing_rate": 0.352}
+  ]
 )
+db.users.insert({'login':'test','password':'testpw','usertype':'free'})
+db.users.insert({'login':'test_pr','password':'testpwpr','usertype':'premium'})
 
-db.servers.insert()
-db.users.insert()
+var now = new Date();
+var fbr = 10;
+var login = "test";
+var node = "ns242424";
+var proxmox_vmid = 350;
+var dedicated = true;
+var flavorname = "small";
+var new_flavorname = "huge";
+var new_billingrate = 20;
+var vm = db.vms.insertOne({
+               'proxmox_id': proxmox_vmid,
+               'node': node,
+               'is_dedicated': dedicated,
+               'owner': login,
+               'date_created': now,
+               'date_deleted': null,
+               'flavor_history': [
+                   {    
+                       'date_from': now,
+                       'date_to': null,
+                       'flavorname': flavorname,
+                       'flavor_billing_rate': fbr
+                   }
+               ]
+               });
+*/
+
+
 
 users =
 [
@@ -46,4 +76,58 @@ users =
   }
 ]
 
-USERCLASS: "Free" ou "Premium"
+/*
+
+======================================
+STRUCTURE DE LA BDD
+======================================
+
+table users:
+var user = {
+    "login": login,
+    "password": password,
+    "typeofUser": userType,
+    "money": 0,
+    "date_joined": new Date(),
+    "last_billed": new Date(),
+    "owned_vms": [ObjectID()]
+};
+
+table allowed_flavors: 
+var allowed_flavor = {
+    name
+    cpus
+    ram
+    disk
+    swap
+    flavor_billing_rate
+}
+
+table vms: 
+var vm = {
+    'proxmox_id': 600,
+    'node': 'ns3060138',
+    'is_dedicated': true,
+    'owner': "test",
+    'date_created': new Date(),
+    'date_deleted': null,
+    'flavor_history' = [
+        {   
+            'date_from': 
+            'date_to'
+            'flavor'
+            'flavor_billing_rate'
+        }
+    ]
+}
+
+table backup: 
+{
+    "login": login,
+    "vmid": vmid,
+    "backupPath": backupPath
+}
+
+
+
+*/
