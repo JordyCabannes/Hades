@@ -29,21 +29,27 @@ export class CreationVmPopupComponent{
   	@HostBinding('style.display')   display = 'block';
   	@HostBinding('style.position')  position = 'absolute';
 
+  	vms: Vm[];
+
   	details: string;
   	sending: boolean = false;
 
+	selectedVm: Vm;
+
   	constructor(private router: Router,
-  		  private location: Location
+  		  private location: Location,
+  		  private vmService: VmService
 	) {}
 
-  	send() {
-	    this.sending = true;
-	    this.details = 'Sending Message...';
-	    setTimeout(() => {
-	      this.sending = false;
-	      this.closePopup();
-	    }, 1000);
-	}
+  	add(login: string, password:string, memorySize:number): void {
+    login = login.trim();
+    password = password.trim();
+    if (!login || !password || !memorySize) { return; }
+	    this.vmService.create(login, password, memorySize)
+	      .then(vm => {
+	        this.vms.push(vm);
+	      });
+  	}
   	
   	cancel() {
     	this.closePopup();

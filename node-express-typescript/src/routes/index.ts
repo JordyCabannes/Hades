@@ -31,7 +31,7 @@ index.get('/', function(req, res, next)
 /* post createVM */
 index.post('/createVM', async function(req, res, next) 
 {
-    console.log("request body" + req.body);
+    console.log("================== request body" + req.body);
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
 

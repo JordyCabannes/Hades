@@ -26,9 +26,9 @@ export class VmDetailComponent implements OnInit{
 	) {}
 
 	ngOnInit(): void {
-  		this.route.params
-    			.switchMap((params: Params) => this.vmService.getVm(+params['id']))
-    			.subscribe(vm => this.vm = vm);
+  		//this.route.params
+    	//		.switchMap((params: Params) => this.vmService.getVm(+params['id']))
+    	//		.subscribe(vm => this.vm = vm);
 	}
 
 }

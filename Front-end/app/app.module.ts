@@ -1,6 +1,8 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
+import { HttpModule }    from '@angular/http';
+import './rxjs-extensions';
 
 import { VmService }         from './vm.service';
 
@@ -17,7 +19,7 @@ import { HomeModule }      from './home.module';
 
 
 @NgModule({
-  imports:      [ BrowserModule,FormsModule,AppRoutingModule, HomeModule],
+  imports:      [ BrowserModule,FormsModule,AppRoutingModule, HomeModule, HttpModule],
   declarations: [ AppComponent, LoginComponent, CreateAccountComponent],
   providers: [VmService],
   bootstrap:    [ AppComponent ]

@@ -27,7 +27,7 @@ export class HomeComponent{
     private vmService: VmService) { }
 
 	gotoDetail(): void {
-    	this.router.navigate(['./detailvm', this.selectedVm.id], { relativeTo: this.route });
+    	this.router.navigate(['./detailvm', this.selectedVm.containerID], { relativeTo: this.route });
   	}	
 
 	onSelect(vm: Vm): void {
@@ -35,13 +35,13 @@ export class HomeComponent{
   		this.gotoDetail();
 	}
 
-	ngOnInit(): void {
-    	this.getVms();
-	}
+	//ngOnInit(): void {
+    	//this.getVms();
+	//}
 
-	getVms(): void {
-    	this.vmService.getVms().then(vms => this.vms = vms);
-  	}
+	//getVms(): void {
+  //  	this.vmService.getVms().then(vms => this.vms = vms);
+  //	}
 
   	logout(){
   	}
