@@ -1,0 +1,31 @@
+<div>
+	<div id="bar" class="container-fluid">
+		<div class="row">
+			<div id="app" class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
+				<img id="logoApp" class="col-xs-10 col-sm-4 col-md-6 col-lg-6 imgSizeSuperXs imgSizeXs imgSizeXsBis imgSizeSm imgSizeMd imgSizeLg" src="/app/Pictures/hades-logo.png">
+				<div id="nameApp" class="col-xs-1 col-lg-6 phone notPhone">HADES</div>
+			</div>
+			<div id="VmCreation" class="col-xs-push-2 col-xs-4 col-sm-push-3 col-sm-3 col-md-push-6 col-md-2 col-lg-push-7 col-lg-2">
+				<a [routerLink]="[{ outlets: { popupCreationVm: ['createvm'] } }]" id="BtnCreationVm" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg">Create VM</a>
+			</div>
+			<div id="Logout" class="col-xs-push-2 col-xs-2 col-sm-push-3 col-sm-2 col-md-push-6 col-md-1  col-lg-push-7 col-lg-1">
+				<a id="BtnLogout" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg" routerLink="/" (click)="logout()">Logout</a>
+			</div>
+		</div>
+	</div>
+	<div id="main" class="container-fluid">
+		<div id="subMain" class="row">
+			<div id="divListVM" class="col-xs-12 col-sm-2 col-md-2 col-lg-3">
+				<ul id="listVm" class="col-xs-12 vms">
+				  	<li id="eltListVm" *ngFor="let vm of vms" [class.selected]="vm === selectedVm" (click)="onSelect(vm)">
+				    	<span>{{vm.id}}</span>{{vm.name}}
+				  	</li>
+				</ul>
+			</div>
+			<div id="divDetailVM" class="col-xs-12 col-sm-10 col-md-10 col-lg-9">
+				<router-outlet></router-outlet>
+			</div>
+		</div>
+	</div>
+</div>
+<router-outlet name="popupCreationVm"></router-outlet>

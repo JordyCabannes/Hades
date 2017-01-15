@@ -1,0 +1,6 @@
+:host { position: absolute; bottom: 10%; background: #000000; z-index: 1; }
+
+#creationVm{
+	background: #FFFFFF;
+	color:#000000;
+}
