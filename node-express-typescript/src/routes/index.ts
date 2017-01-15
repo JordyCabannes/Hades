@@ -21,7 +21,7 @@ var db= new DBManager();
 index.get('/', function(req, res, next) 
 {
     db.ajouter_user("coucou", "prout", "Free");
-    db.ajouter_vm_a_user('coucou', 130);
+    db.old_ajouter_vm_a_user('coucou', 130); //changer plus tard pour ajouter_vm_a_user()
     db.associateVmBackupToAnUser("coucou",130,"/home/zaurelezo");
     console.log("lolilol");
 });
@@ -51,6 +51,7 @@ index.post('/createVM', async function(req, res, next)
             var ObjectID  :IGetClusterVmNextIdReply  = await  proxmoxApi.getClusterVmNextId() ;
 
             //TODO: gérer plus tard  le fait que l'user premium doit spécifier le nb de coeur
+            //Note Nicolas : L'user devrait spécifier un Flavor parmi ceux prédéfinis, et on récupère les caractéristiques du flavor dans la BDD. 
             var container : ICreateLxcContainerRequest = 
             {
                 ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
@@ -66,7 +67,7 @@ index.post('/createVM', async function(req, res, next)
                 res.send({"containerID":-1,"Information":"Fail create vm"})
             }else
             {
-                db.ajouter_vm_a_user(req.body.login,ObjectID.id);
+                db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
                 res.send({"containerID":ObjectID.id,"Information":"ok"});//send back vm creation information
             }
 

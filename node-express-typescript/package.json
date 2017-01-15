@@ -1,10 +1,10 @@
 {
   "name": "node-express-typescript",
   "description": "node-express-typescript Sample Application (TypeScript)",
-  "version": "0.0.0",
+  "version": "2.1.4",
   "private": true,
   "scripts": {
-    "start": "tsc -p ./src && node ./src/www.js",
+    "start": "tsc -p --allowUnusedLabels --experimentalDecorators ./src; node ./src/www.js",
     "test": "mocha ./tests/test.js"
   },
   "dependencies": {
