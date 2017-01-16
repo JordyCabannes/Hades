@@ -147,8 +147,10 @@ index.get("/testFrameself", function (req, res, next) {
             vmid: ObjectID.id,
             password: 'rototoroot',
             memory: 1024,
+            sizeGB: 1
         };
-        frameself.reportCreateLxcContainer('ns3060138', container);
+        proxmoxApi.createLxcContainer('ns3060138', container);
+        //frameself.reportCreateLxcContainer('ns3060138', container);
     });
 });
 Object.defineProperty(exports, "__esModule", { value: true });

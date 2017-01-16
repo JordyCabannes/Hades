@@ -22,6 +22,7 @@ export class ProxmoxApiService
     private endpoint : string;
     private CSRF : string;
     private ticket : {[id:string]:any;};
+    private _node : string;
 
     constructor(endpoint : string, ticket : {[id:string]:any;}, CSRF : string)
     {
@@ -35,6 +36,16 @@ export class ProxmoxApiService
         };
 
         this.httpService = new HttpService(this.endpoint, httpheaders, this.ticket);
+    }
+
+    public set node(value : string)
+    {
+        this._node = value;
+    }
+
+    public get node()
+    {
+        return this._node;
     }
 
     public async restoreLxcContainer(node : string, restoreLxcContainerRequest : IRestoreLxcContainerRequest) : Promise<IUpidReply>
@@ -157,6 +168,12 @@ export class ProxmoxApiService
     public async createLxcContainer(node : string, lxcContainerRequest : ICreateLxcContainerRequest) : Promise<IUpidReply>
     {
         var finalUrl = `/nodes/${node}/lxc`;
+        var body : {[id:string]:any;} = lxcContainerRequest;
+        if(body.hasOwnProperty('sizeGB'))
+        {
+            body['rootfs'] = 'local:' + body['sizeGB'];
+            delete body['sizeGB'];
+        }
         var response = await this.httpService.post(finalUrl, lxcContainerRequest);
 
         if(response.code != 200)

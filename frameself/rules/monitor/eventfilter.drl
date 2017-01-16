@@ -1,0 +1,9 @@
+import frameself.format.*;
+
+rule "filter expired event "
+    when
+       Clock($currentDate: date)
+       $event : Event($e:expiry before $currentDate )
+    then
+       retract($event);
+end

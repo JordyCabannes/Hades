@@ -1,0 +1,19 @@
+import frameself.format.*;
+import java.util.Date;
+import java.util.ArrayList;
+
+rule "CreateContainerFailedAction"
+    when
+       Rfc(category == "CREATE_CONTAINER_FAILED_RFC", $value : value)
+    then 
+	   ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+   	   attributes.add(new Attribute("value", $value));
+   	   Action action = new Action();
+	   action.setAttributes(attributes);
+   	   action.setCategory("CREATE_CONTAINER_FAILED_ACTION");
+   	   action.setTimestamp(new Date());
+	   action.setName("CREATE");
+	   action.setEffector(new Effector("LOL"));
+       insert(action);
+end
+
