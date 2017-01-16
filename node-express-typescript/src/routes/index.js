@@ -37,6 +37,12 @@ index.post("/createAccount", cors(), function (req, res, next) {
         }
     });
 });
+index.get("/UserVMs/:login", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var listVM = yield db.list_all_vms_user(req.params.login);
+        res.send({ "listVM": listVM });
+    });
+});
 /*sign in*/
 index.post("/signIn", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {

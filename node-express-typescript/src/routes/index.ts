@@ -51,6 +51,15 @@ index.post("/createAccount", cors(), async function(req, res, next)
 });
 
 
+index.get("/UserVMs/:login",cors(), async function(req, res, next)
+{
+    var listVM = await  db.list_all_vms_user(req.params.login);
+   
+    res.send({"listVM":listVM});
+
+});
+
+
 /*sign in*/
 index.post("/signIn", cors(), async function(req, res, next)
 {
