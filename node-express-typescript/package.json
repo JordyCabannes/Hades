@@ -4,7 +4,7 @@
   "version": "2.1.4",
   "private": true,
   "scripts": {
-    "start": "tsc -p --allowUnusedLabels --experimentalDecorators ./src; node ./src/www.js",
+    "start": "tsc -p  ./src && node ./src/www.js",
     "test": "mocha ./tests/test.js"
   },
   "dependencies": {
@@ -19,7 +19,8 @@
     "mongodb": "~2.0",
     "kerberos" : "~0.0",
     "requestify" : "~0.2.5",
-    "dgram" : "~1.0.1"
+    "dgram" : "~1.0.1",
+	"cors" : "~0.0"
   },
   "devDependencies": {
     "browser-sync": "^2.8.2",
