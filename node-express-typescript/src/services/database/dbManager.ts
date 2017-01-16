@@ -452,4 +452,20 @@ export class DBManager
         return result;
     }
 
+
+    /*permet de savoir si l'utilisateur possède un compte*/
+    public async hasAnAccount(login:string,password:string) : Promise<boolean>
+    {
+        var functionHasAnAccount = async function(db) {
+             var res = await db.collection('users').find({"login": login, "password": password}).count();
+             return res;
+        }
+
+        var db = await MongoClient.connect(this.url);
+        var result = await functionHasAnAccount(db);
+        console.log("result has account for "+login +" and password "+ password +" is : ", result);
+        db.close();
+        return result == 1;
+    }
+
 }

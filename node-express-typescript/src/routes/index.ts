@@ -18,6 +18,10 @@ var db= new DBManager();
 
 var cors=require('cors');
 
+
+index.options('/*', cors());
+
+
 /* GET home page. */
 index.get('/', function(req, res, next) 
 {
@@ -29,9 +33,36 @@ index.get('/', function(req, res, next)
 
 
 
-index.options('/*', cors());
 
 
+/*add user account*/
+index.post("/createAccount", cors(), async function(req, res, next)
+{
+    var resHasAccount = await db.hasAnAccount(req.body.login,req.body.password);
+    if (!resHasAccount)
+    {
+         db.ajouter_user(req.body.login,req.body.password,req.body.userType);
+        res.send({"addUser":"ok","Information":"ok"});
+    }else 
+    {
+       
+        res.send({"addUser":"ko","Information":"Already has an account"});
+    }
+});
+
+
+/*sign in*/
+index.post("/signIn", cors(), async function(req, res, next)
+{
+    var resHasAccount = await db.hasAnAccount(req.body.login,req.body.password);
+    if (resHasAccount)
+    {
+        res.send({"signIn":"ok","Information":"ok"});
+    }else
+    {
+        res.send({"signIn":"ko","Information":"Wrong login or password"});
+    }
+});
 
 /* post createVM */
 index.post('/createVM', cors(), async function(req, res, next) 
@@ -41,8 +72,8 @@ index.post('/createVM', cors(), async function(req, res, next)
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
 
     //free or premium
-    var typeUser = await db.getTypeOfUser("coucou");
-    var numberVM =  await db.countUserNbVM("coucou");
+    var typeUser = await db.getTypeOfUser(req.body.login);
+    var numberVM =  await db.countUserNbVM(req.body.login);
     console.log(".............****************************", typeUser);
     console.log("..............********************************",numberVM);
     if (typeUser=="Free" && numberVM>0)
@@ -72,7 +103,8 @@ index.post('/createVM', cors(), async function(req, res, next)
                 res.send({"containerID":-1,"Information":"Fail create vm"})
             }else
             {
-                db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
+                db.ajouter_vm_a_user(req.body.login, 'ns3060138', ObjectID.id, false,req.body.login+ObjectID.id.toString());
+                //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
                 res.send({"containerID":ObjectID.id,"Information":"ok"});//send back vm creation information
             }
 

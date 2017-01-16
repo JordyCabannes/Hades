@@ -4,7 +4,7 @@
   "version": "2.1.4",
   "private": true,
   "scripts": {
-    "start": "tsc -p ./src; node ./src/www.js",
+    "start": "tsc -p ./src && node ./src/www.js",
     "test": "mocha ./tests/test.js"
   },
   "dependencies": {
