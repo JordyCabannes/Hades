@@ -16,6 +16,7 @@ const index = Router();
 /*db Manager*/
 var db= new DBManager();
 
+var cors=require('cors');
 
 /* GET home page. */
 index.get('/', function(req, res, next) 
@@ -28,8 +29,12 @@ index.get('/', function(req, res, next)
 
 
 
+index.options('/*', cors());
+
+
+
 /* post createVM */
-index.post('/createVM', async function(req, res, next) 
+index.post('/createVM', cors(), async function(req, res, next) 
 {
     console.log("================== request body" + req.body);
     //connection

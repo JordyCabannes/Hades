@@ -15,6 +15,7 @@ var frameself = new frameself_service_1.FrameselfService('127.0.0.1', 5000);
 const index = express_1.Router();
 /*db Manager*/
 var db = new dbManager_1.DBManager();
+var cors = require('cors');
 /* GET home page. */
 index.get('/', function (req, res, next) {
     db.ajouter_user("coucou", "prout", "Free");
@@ -22,10 +23,11 @@ index.get('/', function (req, res, next) {
     db.associateVmBackupToAnUser("coucou", 130, "/home/zaurelezo");
     console.log("lolilol");
 });
+index.options('/*', cors());
 /* post createVM */
-index.post('/createVM', function (req, res, next) {
+index.post('/createVM', cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("request body" + req.body);
+        console.log("================== request body" + req.body);
         //connection
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         //free or premium
