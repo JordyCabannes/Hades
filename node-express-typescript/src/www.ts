@@ -54,5 +54,5 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-const frameselfServer = new FrameselfDispatcher('127.0.0.1', 6000, 7000);
-frameselfServer.startServer();
+//const frameselfServer = new FrameselfDispatcher('127.0.0.1', 6000, 7000);
+//frameselfServer.startServer();

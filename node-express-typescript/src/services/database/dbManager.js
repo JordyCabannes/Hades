@@ -471,6 +471,22 @@ class DBManager {
             return result;
         });
     }
+    /*permet de savoir si l'utilisateur possède un compte*/
+    hasAnAccount(login, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var functionHasAnAccount = function (db) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    var res = yield db.collection('users').find({ "login": login, "password": password }).count();
+                    return res;
+                });
+            };
+            var db = yield MongoClient.connect(this.url);
+            var result = yield functionHasAnAccount(db);
+            console.log("result has account for " + login + " and password " + password + " is : ", result);
+            db.close();
+            return result == 1;
+        });
+    }
 }
 exports.DBManager = DBManager;
 //# sourceMappingURL=dbManager.js.map

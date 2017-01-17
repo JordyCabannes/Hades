@@ -1,0 +1,31 @@
+<div id="contentCreateAccount" class="col-xs-12">
+	<div class="row">
+		<img id="logoApp" class="col-xs-push-2 col-xs-3 col-sm-push-2 col-sm-3 col-md-push-3 col-md-2 col-lg-push-3 col-lg-2 imgSizeSuperXs imgSizeXs imgSizeXsBis imgSizeSm imgSizeMd imgSizeLg" src="/app/Pictures/hades-logo.png">
+		<div id="nameApp" class="col-xs-push-2 col-xs-4 col-sm-push-2 col-sm-4 col-md-push-3 col-md-2 col-lg-push-3 col-lg-4 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg">HADES</div>
+	</div>
+	<form id="formCreateAccount" class="col-xs-12" method="post">
+		<div class="row">
+		    <div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
+		      	<label for="login">Login</label>
+		      	<input type="text" id="login" class="form-control" nameplaceholder="Enter your login" required/>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
+		      	<label for="password">Password</label>
+		        <input type="password" id="password" class="form-control" name="password" required/>
+		    </div>
+		</div>
+		<div class="row">
+			<div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
+            	<label for="selectOffer">Offer</label>
+                <select class="col-lg-12 form-control" id="selectOffer" name="selectOffer" data-style="btn-default">
+                    <option>Free</option> 
+                    <option>Premium</option>
+                </select>
+            </div>
+        </div>
+		<button id="Submit" class="btn btn-default btnStyle" type="submit">Sign up</button>    
+	</form>
+	<button id="btnBack" class="btn btn-default btnStyle col-xs-3 col-sm-push-2 col-sm-2 col-md-push-3 col-md-2 col-lg-push-4 col-lg-2" (click)="goBack()">Back</button>
+</div>
