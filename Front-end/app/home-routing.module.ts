@@ -13,7 +13,7 @@ export const homeRoutes: Routes = [
     	component: HomeComponent,
     		children: [
   				{ path: 'detailvm/:id', component: VmDetailComponent },
-  				{ path: 'createvm', component: CreationVmPopupComponent, outlet: 'popupCreationVm'}
+          {path: 'createvm', component: CreationVmPopupComponent, outlet: 'popupCreationVm'},
   			]
   	}
 

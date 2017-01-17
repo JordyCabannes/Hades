@@ -17,11 +17,13 @@ import { Vm } from './vm';
 			  'h2{text-align:left; margin-left:5px; color:#369}',
 			  '#creationVmYes{background:#369; color:#FFFFFF}',
 			  '#cancel{background:#C60800; color:#FFFFFF',
-
-
-
+        '#errorTitle{text-align:center;}',
+        '#errorDiv{margin-top:10vh;transform: translateY(-50%);}',
+        '#successTitle{text-align:center;}',
+        '#successDiv{margin-top:10vh;transform: translateY(-50%);}'
 	],
-	animations: [ slideInDownAnimation ]
+	animations: [ slideInDownAnimation ],
+
 })
 
 export class CreationVmPopupComponent{
@@ -29,31 +31,54 @@ export class CreationVmPopupComponent{
   	@HostBinding('style.display')   display = 'block';
   	@HostBinding('style.position')  position = 'absolute';
 
-  	vms: Vm[];
+    vms:Vm[]=[];
 
-  	details: string;
-  	sending: boolean = false;
+  	error: boolean =false;
+  	created: boolean = false;
+    createdYet: boolean= false;
 
 	selectedVm: Vm;
 
   	constructor(private router: Router,
   		  private location: Location,
-  		  private vmService: VmService
+  		  private vmService: VmService,
+        private route: ActivatedRoute,
+
+  
 	) {}
 
-  	add(login: string, password:string, memorySize:number): void {
+
+  add(login: string, password:string, memorySize:number): void {
     login = login.trim();
     password = password.trim();
     if (!login || !password || !memorySize) { return; }
-	    this.vmService.create(login, password, memorySize)
-	      .then(vm => {
+	   this.vmService.create(login, password, memorySize)
+	      .subscribe(vm => {
+          console.log(vm);
+          this.createdYet=true;
 	        this.vms.push(vm);
-	      });
+          if(this.vms[this.vms.length-1].containerID==-1){
+              this.error=true;
+              this.created=false;
+            }
+          else{
+              this.error=false;
+              this.created=true;
+          }
+          }
+        );
+
   	}
   	
   	cancel() {
     	this.closePopup();
   	}
+
+    back(){
+      this.location.back();
+      this.error=false;
+      this.createdYet=false;
+    }
 
   	closePopup() {
     	// Providing a `null` value to the named outlet

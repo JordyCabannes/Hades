@@ -1,19 +1,30 @@
 <div id="popupTot" class="col-xs-12">
 	<div id ="creationVm" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid">
 		<div class="row">
-			<h2>Create VM</h2>	
-			<form id="formCreationVm" class="col-lg-12" method="post">
-				<div class="form-group col-lg-6">
-				    <label for="password">Password VM</label>
-				    <input type="password" id="password" class="form-control" name="password" required/>
-				</div>
-				<div class="form-group col-lg-6">
-				    <label for="storageSize">Storage size(mo)</label>
-				    <input type="number" min="0" step="1024" id="storageSize" name="storageSize" class="form-control" required>
-				</div>
-				<button id="creationVmYes" class="btn btn-default" type="submit" (click)="add('tototo', 'toyo', 1000);">Create</button>    
-				<a id="cancel" class="btn btn-default" (click)="cancel()">Cancel</a>
-			</form>
+			<div *ngIf="error" id="errorDiv">
+				<h2 id="errorTitle">Error : vm creation did not success</h2>	
+				<button id="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+			</div>
+			<div *ngIf="created" id="successDiv">
+				<h2 id="successTitle">Vm is created</h2>	
+				<button id="quitSuccessPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+			</div>
+			<div *ngIf="!createdYet">
+				<h2>Create VM</h2>
+				<form id="formCreationVm" class="col-lg-12" method="post">
+					<div class="form-group col-lg-6">
+					    <label for="password">Password VM</label>
+					    <input type="password" id="password" class="form-control" name="password" pattern=".{5,}" required title="5 characters minimum" required/>
+					</div>
+					<div class="form-group col-lg-6">
+					    <label for="storageSize">Storage size(mo)</label>
+					    <input type="number" min="0" step="1024" id="storageSize" name="storageSize" class="form-control" required>
+					</div>
+					<button id="creationVmYes" class="btn btn-default" type="submit" (click)="add('tototo', 'toyoyo', 1000);">Create</button>    
+					<a id="cancel" class="btn btn-default" (click)="cancel()">Cancel</a>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>
+<router-outlet name="messageCreationVm"></router-outlet>

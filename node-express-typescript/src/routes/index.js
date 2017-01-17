@@ -55,7 +55,8 @@ index.post('/createVM', cors(), function (req, res, next) {
                     res.send({ "containerID": -1, "Information": "Fail create vm" });
                 }
                 else {
-                    db.old_ajouter_vm_a_user(req.body.login, ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
+                    //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
+                    console.log("--------- creation réussi");
                     res.send({ "containerID": ObjectID.id, "Information": "ok" }); //send back vm creation information
                 }
             }

@@ -3,13 +3,13 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { Vm } from './vm';
+import { User } from './user';
 
 
 @Injectable()
-export class VmService {
+export class userService {
 	
-	private vmsUrl = 'http://127.0.0.1:3001';
+	private usersUrl = 'http://127.0.0.1:3001';
 
 	private headers = new Headers({'Content-Type': 'application/json'});
 
@@ -29,9 +29,9 @@ export class VmService {
 	    return Promise.reject(error.message || error);
   	}
 
-  	public create(login: string, password: string, memorySize: number){
+  	public create(login: string, password: string, offer: string){
   		return this.http
-    		.post(this.vmsUrl+'/createVM', JSON.stringify({'login': login,'password': password,'memory': memorySize}), {headers: this.headers})
+    		.post(this.usersUrl+'/createUser', JSON.stringify({'login': login,'password': password,'memory': memorySize}), {headers: this.headers})
     		.map(function(res) {
           console.log(res.json());
           return res.json();
