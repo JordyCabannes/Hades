@@ -5,8 +5,10 @@
 				<img id="logoApp" class="col-xs-10 col-sm-4 col-md-6 col-lg-6 imgSizeSuperXs imgSizeXs imgSizeXsBis imgSizeSm imgSizeMd imgSizeLg" src="/app/Pictures/hades-logo.png">
 				<div id="nameApp" class="col-xs-1 col-lg-6 phone notPhone">HADES</div>
 			</div>
-			<div id="VmCreation" class="col-xs-push-2 col-xs-4 col-sm-push-3 col-sm-3 col-md-push-6 col-md-2 col-lg-push-7 col-lg-2">
-				<a [routerLink]="[{ outlets: { popupCreationVm: ['createvm'] } }]" id="BtnCreationVm" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg">Create VM</a>
+			<div *ngIf="user">
+				<div id="VmCreation" class="col-xs-push-2 col-xs-4 col-sm-push-3 col-sm-3 col-md-push-6 col-md-2 col-lg-push-7 col-lg-2">
+					<a [routerLink]="[{ outlets: { popupCreationVm: ['createvm', user.login] } }]" id="BtnCreationVm" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg">Create VM</a>
+				</div>
 			</div>
 			<div id="Logout" class="col-xs-push-2 col-xs-2 col-sm-push-3 col-sm-2 col-md-push-6 col-md-1  col-lg-push-7 col-lg-1">
 				<a id="BtnLogout" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg" routerLink="/" (click)="logout()">Logout</a>
@@ -18,7 +20,7 @@
 			<div id="divListVM" class="col-xs-12 col-sm-2 col-md-2 col-lg-3">
 				<ul id="listVm" class="col-xs-12 vms">
 				  	<li id="eltListVm" *ngFor="let vm of vms" [class.selected]="vm === selectedVm" (click)="onSelect(vm)">
-				    	<span>{{vm.id}}</span>{{vm.name}}
+				    	<span>CT {{vm.proxmox_id}}</span>
 				  	</li>
 				</ul>
 			</div>

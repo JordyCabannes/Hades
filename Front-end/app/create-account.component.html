@@ -7,25 +7,37 @@
 		<div class="row">
 		    <div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
 		      	<label for="login">Login</label>
-		      	<input type="text" id="login" class="form-control" nameplaceholder="Enter your login" required/>
+		      	<input #login type="text" id="login" class="form-control" nameplaceholder="Enter your login" required/>
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
 		      	<label for="password">Password</label>
-		        <input type="password" id="password" class="form-control" name="password" required/>
+		        <input #password type="password" id="password" class="form-control" name="password" required/>
 		    </div>
 		</div>
 		<div class="row">
 			<div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
             	<label for="selectOffer">Offer</label>
-                <select class="col-lg-12 form-control" id="selectOffer" name="selectOffer" data-style="btn-default">
-                    <option>Free</option> 
-                    <option>Premium</option>
+                <select #selectOffer class="col-lg-12 form-control" id="selectOffer" name="selectOffer" data-style="btn-default">
+                    <option value="Free" selected>Free</option> 
+                    <option value="Premium">Premium</option>
                 </select>
             </div>
         </div>
-		<button id="Submit" class="btn btn-default btnStyle" type="submit">Sign up</button>    
+		<button id="Submit" class="btn btn-default btnStyle" type="submit" (click)="add(login.value,password.value,selectOffer.value)">Sign up</button>    
 	</form>
 	<button id="btnBack" class="btn btn-default btnStyle col-xs-3 col-sm-push-2 col-sm-2 col-md-push-3 col-md-2 col-lg-push-4 col-lg-2" (click)="goBack()">Back</button>
+</div>
+<div *ngIf="messageResultat" id ="creationAccount" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid">
+	<div class="row">
+		<div *ngIf="error" id="errorDiv">
+			<h2 id="errorTitle">Error : user account creation did not success</h2>	
+			<button id="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+		</div>
+		<div *ngIf="created" id="successDiv">
+			<h2 id="successTitle">User account is created</h2>	
+			<button id="quitSuccessPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" [routerLink]="['/login']">OK</button>    
+		</div>
+	</div>
 </div>

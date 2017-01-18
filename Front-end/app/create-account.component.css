@@ -97,3 +97,45 @@
     font-size: 120px;
   }
 }
+
+#popupTot{
+  height:100vh;
+}
+
+#creationAccount{ 
+  background: #FFFFFF; 
+  color:#000000; 
+  height:40vh; 
+  box-shadow: 4px 4px 6px #aaa; 
+  margin-top:30vh;
+  transform: translateY(-50%); 
+  margin-left: 50vw; 
+  transform: translateX(-50%);
+  position: absolute;
+  z-index: 1;
+}
+
+h2{
+  text-align:left; 
+  margin-left:5px; 
+  color:#369;
+}
+
+
+#errorTitle{
+  text-align:center;
+}
+
+#errorDiv{
+  margin-top:10vh;
+  transform: translateY(-50%);
+}
+
+#successTitle{
+  text-align:center;
+}
+
+#successDiv{
+  margin-top:10vh;
+  transform: translateY(-50%);
+}

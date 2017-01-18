@@ -17,7 +17,7 @@ import { VmService } from './vm.service';
 export class VmDetailComponent implements OnInit{
 
 	@Input()
-	vm: Vm;
+	public vm: Vm;
 
 	constructor(
 	  private vmService: VmService,
@@ -26,9 +26,12 @@ export class VmDetailComponent implements OnInit{
 	) {}
 
 	ngOnInit(): void {
-  		//this.route.params
-    	//		.switchMap((params: Params) => this.vmService.getVm(+params['id']))
-    	//		.subscribe(vm => this.vm = vm);
+  		this.route.params
+    		.switchMap((params: Params) => this.vmService.getVm(+params['id']))
+    		.subscribe(vm => {
+    			console.log(vm);
+    			this.vm = vm;
+    		});
 	}
 
 }

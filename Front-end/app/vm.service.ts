@@ -30,6 +30,7 @@ export class VmService {
   	}
 
   	public create(login: string, password: string, memorySize: number){
+      console.log("0000000 :"+login );
   		return this.http
     		.post(this.vmsUrl+'/createVM', JSON.stringify({'login': login,'password': password,'memory': memorySize}), {headers: this.headers})
     		.map(function(res) {
@@ -38,4 +39,28 @@ export class VmService {
         })
     		.catch(this.handleError);
   	}
+
+  public getVms(login: string){
+      console.log(login);
+      const url = `${this.vmsUrl + '/UserVMs'}/${login}`;
+      console.log(url);
+      return this.http.get(url)
+        .map(function(response) {
+          console.log(response.json());
+          return response.json().listVM;
+        })
+        .catch(this.handleError);
+  }
+
+    public getVm(id: number){
+      console.log(id);
+      const url = `${this.vmsUrl + '/VM'}/${id}`;
+      console.log(url);
+      return this.http.get(url)
+        .map(function(response) {
+          console.log(response.json().VM);
+          return response.json().VM;
+        })
+        .catch(this.handleError);
+  }
 }

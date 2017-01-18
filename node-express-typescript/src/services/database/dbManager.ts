@@ -58,7 +58,8 @@ export class DBManager
     public async ajouter_vm_a_user(login: string, node: string, proxmox_vmid: number, dedicated: boolean, flavorname: string): Promise<string> {
         var ajouter_vm = async function(db) {
             var now = new Date();
-            var fbr = this.get_flavor_billing_rate(flavorname);
+            var fbr = null;
+            //this.get_flavor_billing_rate(flavorname);
             var vm = await db.collection('vms').insertOne({
                'proxmox_id': proxmox_vmid,
                'node': node,
@@ -136,6 +137,38 @@ export class DBManager
         db.close();
         return result;
     }
+
+
+    /*Récupère un user suivant son login*/
+    public async get_user(username: string) {
+        var user = async function(db) {
+            var res = await db.collection('users').find(
+                {"login": username},{'login': 1, 'password': 1, 'typeofUser':1 }
+            ).toArray();
+            return res;
+        }
+        var db = await MongoClient.connect(this.url);
+        var result = await user(db);
+        db.close();
+        return result;
+    }
+
+    /*Récupère une vm suivant son proxmox_id*/
+    public async getVm(id: number) {
+        var vm = async function(db) {
+            console.log(+id);
+            var res = await db.collection('vms').find(
+                {"proxmox_id": +id}
+            ).toArray();
+            return res;
+        }
+        var db = await MongoClient.connect(this.url);
+        var result = await vm(db);
+        db.close();
+        console.log(result);
+        return result;
+    }
+
 
     /*Liste toutes les VMs d'un user (celles actives ET celles supprimées)*/
     public async list_all_vms_user(username: string) {
@@ -253,8 +286,8 @@ export class DBManager
     /*Dit si un user est Free ou Premium*/
     public async getTypeOfUser(userlogin: string): Promise<string> {
         var functiongetuserType = async function(db) {
-             var res = await db.collection('users').findOne({"login": userlogin}).typeofUser;
-             return res;
+             var res = await db.collection('users').findOne({"login": userlogin}, {'typeofUser':1});
+             return res.typeofUser;
         }
 
         var db = await MongoClient.connect(this.url);

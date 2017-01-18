@@ -9,11 +9,11 @@ import { CreationVmPopupComponent } from './creationVm-popup.component';
 
 export const homeRoutes: Routes = [
 	{
-		path: 'home',
+		path: 'home/:login',
     	component: HomeComponent,
     		children: [
   				{ path: 'detailvm/:id', component: VmDetailComponent },
-          {path: 'createvm', component: CreationVmPopupComponent, outlet: 'popupCreationVm'},
+          {path: 'createvm/:login', component: CreationVmPopupComponent, outlet: 'popupCreationVm'},
   			]
   	}
 

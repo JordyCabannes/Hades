@@ -1,11 +1,15 @@
 import { Component, HostBinding } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { VmService } from './vm.service';
+import { UserService } from './user.service';
+
 import { Router, ActivatedRoute, Params} from '@angular/router';
 import { Location }                 from '@angular/common';
 import { slideInDownAnimation }   from './animation';
 
+import { VmCreation } from './vmCreation';
 import { Vm } from './vm';
+import { User } from './user';
 
 
 @Component({
@@ -16,7 +20,7 @@ import { Vm } from './vm';
 			  '#creationVm{ background: #FFFFFF; color:#000000; height:40vh; box-shadow: 4px 4px 6px #aaa; margin-top:30vh;transform: translateY(-50%); margin-left: 50vw; transform: translateX(-50%)}',
 			  'h2{text-align:left; margin-left:5px; color:#369}',
 			  '#creationVmYes{background:#369; color:#FFFFFF}',
-			  '#cancel{background:#C60800; color:#FFFFFF',
+			  '#cancel{background:#C60800; color:#FFFFFF}',
         '#errorTitle{text-align:center;}',
         '#errorDiv{margin-top:10vh;transform: translateY(-50%);}',
         '#successTitle{text-align:center;}',
@@ -32,6 +36,7 @@ export class CreationVmPopupComponent{
   	@HostBinding('style.position')  position = 'absolute';
 
     vms:Vm[]=[];
+    user:User;
 
   	error: boolean =false;
   	created: boolean = false;
@@ -43,8 +48,7 @@ export class CreationVmPopupComponent{
   		  private location: Location,
   		  private vmService: VmService,
         private route: ActivatedRoute,
-
-  
+        private userService: UserService
 	) {}
 
 
@@ -56,8 +60,7 @@ export class CreationVmPopupComponent{
 	      .subscribe(vm => {
           console.log(vm);
           this.createdYet=true;
-	        this.vms.push(vm);
-          if(this.vms[this.vms.length-1].containerID==-1){
+          if(vm.containerID==-1){
               this.error=true;
               this.created=false;
             }
@@ -69,13 +72,28 @@ export class CreationVmPopupComponent{
         );
 
   	}
+
+    ngOnInit(): void {
+      this.route.params
+      .switchMap((params: Params) => this.userService.getUser(params['login']))
+      .subscribe(user => {
+          this.user=user;
+          });
+
+  }
   	
   	cancel() {
     	this.closePopup();
   	}
 
+    goHome(){
+      this.location.back;
+      this.location.reload;
+    }
+
     back(){
       this.location.back();
+
       this.error=false;
       this.createdYet=false;
     }

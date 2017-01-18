@@ -24,13 +24,25 @@ index.get('/', function (req, res, next) {
     db.associateVmBackupToAnUser("coucou", 130, "/home/zaurelezo");
     console.log("lolilol");
 });
+index.get("/User/:login", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var user = yield db.get_user(req.params.login);
+        if (user) {
+            //res.send({"login":user.login,"password":user.password, "typeofUser":user.typeofUser});
+            res.send({ "user": user[0] });
+        }
+        else {
+            res.send({ "User": "ko", "Information": "ko" });
+        }
+    });
+});
 /*add user account*/
 index.post("/createAccount", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         var resHasAccount = yield db.hasAnAccount(req.body.login, req.body.password);
         if (!resHasAccount) {
-            db.ajouter_user(req.body.login, req.body.password, req.body.userType);
-            res.send({ "addUser": "ok", "Information": "ok" });
+            db.ajouter_user(req.body.login, req.body.password, req.body.typeofUser);
+            res.send({ "addUser": "ok", "Information": "Account created" });
         }
         else {
             res.send({ "addUser": "ko", "Information": "Already has an account" });
@@ -43,9 +55,17 @@ index.get("/UserVMs/:login", cors(), function (req, res, next) {
         res.send({ "listVM": listVM });
     });
 });
+index.get("/VM/:id", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var VM = yield db.getVm(req.params.id);
+        res.send({ "VM": VM[0] });
+    });
+});
 /*sign in*/
 index.post("/signIn", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("valeur de login" + req.params.login);
+        console.log("valeur de password" + req.params.password);
         var resHasAccount = yield db.hasAnAccount(req.body.login, req.body.password);
         if (resHasAccount) {
             res.send({ "signIn": "ok", "Information": "ok" });
@@ -87,9 +107,10 @@ index.post('/createVM', cors(), function (req, res, next) {
                 }
                 else {
                     //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
-                    console.log("--------- creation réussi");
-                    db.ajouter_vm_a_user(req.body.login, 'ns3060138', ObjectID.id, false, req.body.login + ObjectID.id.toString());
+                    //console.log("--------- creation réussi")
+                    var resAdd = db.ajouter_vm_a_user(req.body.login, 'ns3060138', ObjectID.id, false, req.body.login + ObjectID.id.toString());
                     //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
+                    console.log("------ " + resAdd);
                     res.send({ "containerID": ObjectID.id, "Information": "ok" }); //send back vm creation information
                 }
             }

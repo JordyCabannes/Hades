@@ -5,6 +5,7 @@ import { HttpModule }    from '@angular/http';
 import './rxjs-extensions';
 
 import { VmService }         from './vm.service';
+import { UserService }         from './user.service';
 
 import { AppComponent }  from './app.component';
 import { LoginComponent } from './login.component';
@@ -23,7 +24,7 @@ import { HomeModule }      from './home.module';
 @NgModule({
   imports:      [ BrowserModule,FormsModule,AppRoutingModule, HomeModule, HttpModule],
   declarations: [ AppComponent, LoginComponent, CreateAccountComponent],
-  providers: [VmService],
+  providers: [VmService, UserService],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

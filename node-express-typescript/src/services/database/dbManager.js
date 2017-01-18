@@ -59,7 +59,8 @@ class DBManager {
             var ajouter_vm = function (db) {
                 return __awaiter(this, void 0, void 0, function* () {
                     var now = new Date();
-                    var fbr = this.get_flavor_billing_rate(flavorname);
+                    var fbr = null;
+                    //this.get_flavor_billing_rate(flavorname);
                     var vm = yield db.collection('vms').insertOne({
                         'proxmox_id': proxmox_vmid,
                         'node': node,
@@ -132,6 +133,38 @@ class DBManager {
             var db = yield MongoClient.connect(this.url);
             var result = yield ajouter_vm(db);
             db.close();
+            return result;
+        });
+    }
+    /*Récupère un user suivant son login*/
+    get_user(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var user = function (db) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    var res = yield db.collection('users').find({ "login": username }, { 'login': 1, 'password': 1, 'typeofUser': 1 }).toArray();
+                    return res;
+                });
+            };
+            var db = yield MongoClient.connect(this.url);
+            var result = yield user(db);
+            db.close();
+            return result;
+        });
+    }
+    /*Récupère une vm suivant son proxmox_id*/
+    getVm(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var vm = function (db) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    console.log(+id);
+                    var res = yield db.collection('vms').find({ "proxmox_id": +id }).toArray();
+                    return res;
+                });
+            };
+            var db = yield MongoClient.connect(this.url);
+            var result = yield vm(db);
+            db.close();
+            console.log(result);
             return result;
         });
     }
@@ -251,8 +284,8 @@ class DBManager {
         return __awaiter(this, void 0, void 0, function* () {
             var functiongetuserType = function (db) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    var res = yield db.collection('users').findOne({ "login": userlogin }).typeofUser;
-                    return res;
+                    var res = yield db.collection('users').findOne({ "login": userlogin }, { 'typeofUser': 1 });
+                    return res.typeofUser;
                 });
             };
             var db = yield MongoClient.connect(this.url);
