@@ -6,6 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import { Vm } from './vm';
 
 import { VmService } from './vm.service';
+import { WindowService } from './window.service';
 
 @Component({
   moduleId: module.id,
@@ -19,10 +20,15 @@ export class VmDetailComponent implements OnInit{
 	@Input()
 	public vm: Vm;
 
+  public nativeWindow: any;
+
+
   public displayMessageBoxStart:boolean=false;
   public displayMessageBoxStop:boolean=false;
   public displayMessageBoxBackUp:boolean=false;
   public displayMessageBoxBackUpPleaseStopVM:boolean=false;
+  public displayMessageBoxConsolePleaseStartVM:boolean=false;
+
 
   public vmIsStart:boolean=false;
   public errorStart:boolean=false;
@@ -37,8 +43,11 @@ export class VmDetailComponent implements OnInit{
 	constructor(
 	  private vmService: VmService,
 	  private route: ActivatedRoute,
-	  private location: Location
-	) {}
+	  private location: Location,
+    private winRef: WindowService
+	) {
+    this.nativeWindow = winRef.getNativeWindow();
+  }
 
 	ngOnInit(): void {
   		this.route.params
@@ -63,12 +72,12 @@ export class VmDetailComponent implements OnInit{
       this.displayMessageBoxStart=true;
       if(res.Information==="ok"){
         this.vmIsStart=true;
-        this.errorAlreadyStart=true;
+        this.errorAlreadyStart=false;
         this.errorStart=false;
         this.errorNotStarted=false;
       }
       else{
-        if(this.errorAlreadyStart){
+        if(this.vmIsStart){
           this.vmIsStart=false;
           this.errorStart=false;
           this.errorAlreadyStart=true;
@@ -102,7 +111,7 @@ export class VmDetailComponent implements OnInit{
         this.errorStop=false;
       }
       else{
-        if(this.errorNotStarted){
+        if(!this.vmIsStart){
           this.vmIsStop=false;
           this.errorStop=false;
           this.errorNotStarted=true;
@@ -131,6 +140,18 @@ export class VmDetailComponent implements OnInit{
     this.displayMessageBoxStop=false;
     this.displayMessageBoxBackUp=false;
     this.displayMessageBoxBackUpPleaseStopVM=false;
+    this.displayMessageBoxConsolePleaseStartVM=false;
   }
+
+    protected openTabConsole(): void {
+      if(this.vmIsStart || this.errorAlreadyStart){
+        var url = 'https://213.32.27.237:8006/?console=lxc&novnc=1&vmid='+this.vm.proxmox_id+'&vmname=CT'+this.vm.proxmox_id+'&node=ns3060138';
+        console.log(url);
+       var newWindow = this.nativeWindow.open(url);
+      }
+      else{
+        this.displayMessageBoxConsolePleaseStartVM=true;
+      }
+    }
 
 }

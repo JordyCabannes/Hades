@@ -16,6 +16,12 @@
 					<button class="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button> 	
 				</div>
 			</div>
+			<div *ngIf="displayMessageBoxConsolePleaseStartVM" id ="boxStartVmConsole" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid boxInfo">
+				<div class="row">
+					<h2 class="pleaseWait">Please start VM to display console</h2>
+					<button class="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button> 	
+				</div>
+			</div>
 			<div *ngIf="boxWait" id ="boxWait" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid boxInfo">
 				<div class="row">
 					<h1 class="pleaseWait">Please wait</h1>	
@@ -78,7 +84,7 @@
 					</div>
 					<div id="ligne2BtnsVm" class="row">
 						<div id="divBtnConsoleVm" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cellBtnVm">
-							<a id="BtnConsoleVm" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-default btnVm"><p class="contentBtn">Console VM</p></a>
+							<a id="BtnConsoleVm" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-default btnVm" (click)="openTabConsole()"><p class="contentBtn">Console VM</p></a>
 						</div>
 						<div id="divBtnBackUpVm" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cellBtnVm">	
 							<a id="BtnBackUpVm" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-default btnVm" (click)="backUpVmUser()"><p class="contentBtn">Backup VM</p></a>

@@ -143,7 +143,7 @@ index.get("/monitoring/:vmid", function (req, res, next) {
 });
 /*createBackup
 théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
-index.post("/createBackup", function (req, res, next) {
+index.get("/createBackup/:id", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         //connection
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
@@ -152,7 +152,7 @@ index.post("/createBackup", function (req, res, next) {
         }
         else {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var createBackupResult = yield proxmoxApi.createContainerBackup('ns3060138', req.body.vmid);
+            var createBackupResult = yield proxmoxApi.createContainerBackup('ns3060138', req.params.id);
             if (createBackupResult == null) {
                 res.send({ "Information": "Fail create backup" });
             }
