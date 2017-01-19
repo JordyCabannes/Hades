@@ -259,8 +259,8 @@ index.get("/testFrameself",async function(req, res, next)
 
 
 
-/*startVm
-théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
+
+/*startVM: start un container*/
 index.post("/startVM", async function(req, res, next) 
 {
     //connection
@@ -282,5 +282,29 @@ index.post("/startVM", async function(req, res, next)
         }
     }
 });
+
+/*stopVM: arrête un container*/
+index.post("/stopVM", async function(req, res, next) 
+{
+    //connection
+    var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
+
+    if (proxmoxApi==null)
+    {
+        res.send({"Information":"Fail connection server"});
+    }else
+    {
+        var stopVMResult : IUpidReply = await proxmoxApi.stopLxcContainer('ns3060138', req.body.vmid);
+        if (stopVMResult==null)
+        {
+            res.send({"Information":"Fail create backup"});
+        }else
+        {
+            res.send({"Information":"ok"});
+        }
+    }
+});
+
+
 
 export default index;
