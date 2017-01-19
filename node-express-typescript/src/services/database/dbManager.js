@@ -11,7 +11,7 @@ var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 /*
-    Note : Il faut MongoDB version 3.2 pour que ça marche.
+    Note : Il faut MongoDB version 3.4 pour que ça marche.
     Pour checker sa version : mongo --version
     Pour installer, utiliser ces lignes de commande :
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6

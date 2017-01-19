@@ -63,4 +63,15 @@ export class VmService {
         })
         .catch(this.handleError);
   }
+
+  public startVm(id:number){
+      const url = `${this.vmsUrl + '/startVM'}/${id}`;
+      console.log(url);
+      return this.http.get(url)
+        .map(function(response) {
+          console.log(response.json());
+          return response.json();
+        })
+        .catch(this.handleError);
+  }
 }

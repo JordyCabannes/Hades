@@ -210,6 +210,45 @@ index.get("/testFrameself", function (req, res, next) {
         //frameself.reportCreateLxcContainer('ns3060138', container);
     });
 });
+/*startVM: start un container*/
+index.get("/startVM/:id", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        //connection
+        var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
+        if (proxmoxApi == null) {
+            res.send({ "Information": "Fail connection server" });
+        }
+        else {
+            //TODO : voir plus tard le field node quand on travaillera sur ovh
+            var startVMResult = yield proxmoxApi.startLxcContainer('ns3060138', req.params.id);
+            if (startVMResult == null) {
+                res.send({ "Information": "Fail create backup" });
+            }
+            else {
+                res.send({ "Information": "ok" });
+            }
+        }
+    });
+});
+/*stopVM: arrête un container*/
+index.post("/stopVM/:id", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        //connection
+        var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
+        if (proxmoxApi == null) {
+            res.send({ "Information": "Fail connection server" });
+        }
+        else {
+            var stopVMResult = yield proxmoxApi.stopLxcContainer('ns3060138', req.params.id);
+            if (stopVMResult == null) {
+                res.send({ "Information": "Fail create backup" });
+            }
+            else {
+                res.send({ "Information": "ok" });
+            }
+        }
+    });
+});
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = index;
 //# sourceMappingURL=index.js.map

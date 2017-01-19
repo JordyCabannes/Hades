@@ -15,8 +15,8 @@ class ProxmoxUtils {
     static getPromoxApi() {
         return __awaiter(this, void 0, void 0, function* () {
             if (ProxmoxUtils.proxApi == null) {
-                var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
-                ProxmoxUtils.proxApi = yield proxmox.connect('root@pam', 'password');
+                var proxmox = new proxmox_service_1.ProxmoxService('213.32.27.237', '/api2/json');
+                ProxmoxUtils.proxApi = yield proxmox.connect('root@pam', '5po9LDo7Wnvg');
                 if (ProxmoxUtils.proxApi != null)
                     ProxmoxUtils.proxApi.node = 'ns3060138';
             }

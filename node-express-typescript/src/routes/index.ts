@@ -261,7 +261,7 @@ index.get("/testFrameself",async function(req, res, next)
 
 
 /*startVM: start un container*/
-index.post("/startVM", async function(req, res, next) 
+index.get("/startVM/:id", cors(),async function(req, res, next) 
 {
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
@@ -272,10 +272,10 @@ index.post("/startVM", async function(req, res, next)
     }else
     {
         //TODO : voir plus tard le field node quand on travaillera sur ovh
-        var startVMResult : IUpidReply = await proxmoxApi.startLxcContainer('ns3060138', req.body.vmid);
+        var startVMResult : IUpidReply = await proxmoxApi.startLxcContainer('ns3060138', req.params.id);
         if (startVMResult==null)
         {
-            res.send({"Information":"Fail create backup"});
+            res.send({"Information":"Fail start Vm"});
         }else
         {
             res.send({"Information":"ok"});
@@ -284,7 +284,7 @@ index.post("/startVM", async function(req, res, next)
 });
 
 /*stopVM: arrête un container*/
-index.post("/stopVM", async function(req, res, next) 
+index.post("/stopVM/:id", cors(),async function(req, res, next) 
 {
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
@@ -294,10 +294,10 @@ index.post("/stopVM", async function(req, res, next)
         res.send({"Information":"Fail connection server"});
     }else
     {
-        var stopVMResult : IUpidReply = await proxmoxApi.stopLxcContainer('ns3060138', req.body.vmid);
+        var stopVMResult : IUpidReply = await proxmoxApi.stopLxcContainer('ns3060138', req.params.id);
         if (stopVMResult==null)
         {
-            res.send({"Information":"Fail create backup"});
+            res.send({"Information":"Fail stop Vm"});
         }else
         {
             res.send({"Information":"ok"});

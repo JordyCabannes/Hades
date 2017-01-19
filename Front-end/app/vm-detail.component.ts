@@ -18,6 +18,8 @@ export class VmDetailComponent implements OnInit{
 
 	@Input()
 	public vm: Vm;
+  public vmIsStart:boolean=false;
+  public displayMessageBox:boolean=true;
 
 	constructor(
 	  private vmService: VmService,
@@ -33,5 +35,20 @@ export class VmDetailComponent implements OnInit{
     			this.vm = vm;
     		});
 	}
+
+  startVmUser(){
+    this.route.params
+    .switchMap((params:Params) => this.vmService.startVm(+params['id']))
+    .subscribe(res=>{
+      console.log(res);
+      this.displayMessageBox=true;
+      if(res.Information==="ok"){
+        this.vmIsStart=true;
+      }
+      else{
+        this.vmIsStart=false;
+      }
+    });
+  }
 
 }
