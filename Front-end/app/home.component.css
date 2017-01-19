@@ -179,3 +179,13 @@
 
 }
 
+			  #popupTot{height:100vh}
+			  #creationVm{ background: #FFFFFF; color:#000000; height:40vh; box-shadow: 4px 4px 6px #aaa; margin-top:10vh;transform: translateY(-50%); margin-left: 50vw; transform: translateX(-50%); position: absolute;z-index: 23;}
+			  h2{text-align:left; margin-left:5px; color:#369}
+			  #creationVmYes{background:#369; color:#FFFFFF}
+			  #cancel{background:#C60800; color:#FFFFFF}
+        #errorTitle{text-align:center;}
+        #errorDiv{margin-top:10vh;transform: translateY(-50%);}
+        #successTitle{text-align:center;}
+        #successDiv{margin-top:10vh;transform: translateY(-50%);}
+

@@ -23,6 +23,16 @@ export class HomeComponent{
 	public vms: Vm[]=[];
 	selectedVm: Vm;
 
+
+    error: boolean =false;
+    created: boolean = false;
+    createdYet: boolean= false;
+    boxCreateVm:boolean=false;
+
+    createVm():void{
+      this.boxCreateVm=true;
+    }
+
 	constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -50,7 +60,9 @@ export class HomeComponent{
       .subscribe(user => {
           this.user=user;
           });
-          this.getVms();
+      this.getVms();
+
+          
 
 	}
 
@@ -67,8 +79,36 @@ export class HomeComponent{
     });
   }
 
-  	logout(){
-  	}
+   add(login: string, password:string, memorySize:number): void {
+    login = login.trim();
+    password = password.trim();
+    if (!login || !password || !memorySize) { return; }
+     this.vmService.create(login, password, memorySize)
+        .subscribe(vm => {
+          console.log(vm);
+          this.createdYet=true;
+          if(vm.containerID==-1){
+              this.error=true;
+              this.created=false;
+            }
+          else{
+              var vmAux:Vm ={"proxmox_id": null, "node":null, "is_dedicated":null, "owner":null, "date_from":null, "date_to":null,"flavor_name":null };
+              vmAux.proxmox_id = vm.containerID;
+              this.vms.push(vmAux);
+              this.error=false;
+              this.created=true;
+          }
+          }
+        );
+
+    }
+
+  	    goHome(){
+    this.boxCreateVm=false; 
+    this.created=false;
+    this.error=false;    
+     this.createdYet=false;  
+    }
 
   	
 }

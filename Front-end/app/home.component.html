@@ -1,4 +1,4 @@
-<div>
+
 	<div id="bar" class="container-fluid">
 		<div class="row">
 			<div id="app" class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
@@ -7,13 +7,40 @@
 			</div>
 			<div *ngIf="user">
 				<div id="VmCreation" class="col-xs-push-2 col-xs-4 col-sm-push-3 col-sm-3 col-md-push-6 col-md-2 col-lg-push-7 col-lg-2">
-					<a [routerLink]="[{ outlets: { popupCreationVm: ['createvm', user.login] } }]" id="BtnCreationVm" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg">Create VM</a>
+					<a id="BtnCreationVm" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg" (click)="createVm()">Create VM</a>
 				</div>
 			</div>
 			<div id="Logout" class="col-xs-push-2 col-xs-2 col-sm-push-3 col-sm-2 col-md-push-6 col-md-1  col-lg-push-7 col-lg-1">
 				<a id="BtnLogout" class="btn btn-default col-xs-12 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg" routerLink="/" (click)="logout()">Logout</a>
 			</div>
 		</div>
+	</div>
+	<div *ngIf="boxCreateVm" id ="creationVm" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid">
+	<div class="row">
+		<div *ngIf="error" id="errorDiv">
+			<h2 id="errorTitle">Error : vm creation did not success</h2>	
+			<button id="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="goHome()">OK</button>    
+		</div>
+		<div *ngIf="created" id="successDiv">
+			<h2 id="successTitle">Vm is created</h2>	
+			<button id="quitSuccessPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="goHome()">OK</button>    
+		</div>
+		<div *ngIf="!createdYet">
+			<h2>Create VM</h2>
+			<form id="formCreationVm" class="col-lg-12" method="post">
+				<div class="form-group col-lg-6">
+					<label for="password">Password VM</label>
+					<input #password type="password" id="password" class="form-control" name="password" pattern=".{5,}" required title="5 characters minimum" required/>
+				</div>
+				<div class="form-group col-lg-6">
+					<label for="storageSize">Storage size(mo)</label>
+					<input #storageSize type="number" min="0" step="1024" id="storageSize" name="storageSize" class="form-control" required/>
+				</div>
+				<button id="creationVmYes" class="btn btn-default" type="submit" (click)="add(user.login, password.value, storageSize.value);">Create</button>    
+				<a id="cancel" class="btn btn-default" (click)="goHome()">Cancel</a>
+			</form>
+		</div>
+	</div>
 	</div>
 	<div id="main" class="container-fluid">
 		<div id="subMain" class="row">
@@ -29,6 +56,8 @@
 			</div>
 		</div>
 	</div>
-	<router-outlet name="popupCreationVm"></router-outlet>
-</div>
+
+
+
+
 

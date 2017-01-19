@@ -39,7 +39,7 @@ export class CreateAccountComponent{
     login = login.trim();
     password = password.trim();
     userType=userType.trim();
-    if (!login || !password || !userType) { console.log("WHHHHHHAAAAT"); }
+    if (!login || !password || !userType) { return; }
 	this.userService.create(login, password, userType)
 	      .subscribe(user => {
 	      this.messageResultat=true;
