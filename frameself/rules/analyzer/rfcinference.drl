@@ -1,0 +1,14 @@
+import frameself.format.*;
+import java.util.Date;
+
+rule "CreateContainerFailedRfc"
+	when
+		Symptom(category == "CREATE_CONTAINER_FAILED_SYMPTOM", $value: value)
+	then
+		Rfc rfc = new Rfc();
+		rfc.setCategory("CREATE_CONTAINER_FAILED_RFC");
+		rfc.setValue($value);
+		rfc.setTimestamp(new Date());
+		insert(rfc);
+end
+

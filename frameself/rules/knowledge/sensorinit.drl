@@ -1,0 +1,9 @@
+import frameself.format.*;
+
+rule "Init Sensors"
+	when
+    then
+    	insert(new Sensor("PressureSensor"));
+    	insert(new Sensor("RFIDSensor"));
+    	insert(new Sensor("InfraredSensor"));
+end

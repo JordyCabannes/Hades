@@ -7,6 +7,7 @@ const index_1 = require("./routes/index");
 const users_1 = require("./routes/users");
 const cookieParser = require("cookie-parser"); // this module doesn't use the ES6 default export yet
 const app = express();
+var cors = require('cors');
 // view engine setup
 app.set('views', path_1.join(__dirname, 'views'));
 app.set('view engine', 'jade');

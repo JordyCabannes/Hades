@@ -1,0 +1,10 @@
+import frameself.format.*;
+
+rule "Format sensor_0 Event"
+	no-loop true
+	when
+		$event : Event($source: sensor, $source == "sensor_0")
+	then
+		$event.setCategory("luminosity");
+		update($event);
+end

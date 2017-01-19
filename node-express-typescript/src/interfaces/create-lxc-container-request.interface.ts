@@ -9,6 +9,6 @@ export interface ICreateLxcContainerRequest  {
     hostname? : string,
     description? : string,
     memory? : number,
-    disk? : number,
-    cores? : number
+    sizeGB? : number,
+    cores? : number,
 }

@@ -1,0 +1,72 @@
+.cadreMain{
+	background: #000000;
+	border: solid 4px #FFFFFF;
+	height:42vh;
+	border-radius: 5px;
+}
+
+h4{
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+}
+
+.cellBtnVm{
+	height:20.5vh;
+	padding:0px;
+}
+
+.cellBtnVm:hover{
+	background: #CCCCCC;
+}
+
+#btnsVm{
+	padding: 0px;
+	text-align: center;
+}
+
+#divBtnStartVm{
+	border-bottom: solid 1px #FFFFFF;
+	border-right: solid 1px #FFFFFF;
+}
+
+
+#divBtnStopVm{
+	border-bottom: solid 1px #FFFFFF;
+	border-left: solid 1px #FFFFFF;
+}
+
+#divBtnConsoleVm{
+	border-top: solid 1px #FFFFFF;
+	border-right: solid 1px #FFFFFF;
+}
+
+#divBtnBackUpVm{
+	border-top: solid 1px #FFFFFF;
+	border-left: solid 1px #FFFFFF;
+}
+
+.btnVm{
+	height:20vh;
+	background: #000000;
+	border:0px;
+	color: #FFFFFF;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 4vh;
+}
+
+.btnVm:hover{
+	background: #CCCCCC;
+}
+
+.contentBtn{
+	margin-top: 9vh;
+	transform: translateY(-50%);
+}
+
+@media (max-width: 768px){
+	.phone{
+		padding-bottom: 15vh;
+  	}
+
+}

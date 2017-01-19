@@ -7,6 +7,7 @@ import users from './routes/users';
 import cookieParser = require('cookie-parser'); // this module doesn't use the ES6 default export yet
 
 const app: express.Express = express();
+var cors=require('cors');
 
 // view engine setup
 app.set('views', join(__dirname, 'views'));
@@ -19,6 +20,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
+
+
 
 app.use('/', index);
 app.use('/users', users);
@@ -55,6 +58,5 @@ app.use((error: any, req, res, next) => {
   });
   return null;
 });
-
 
 export default app;

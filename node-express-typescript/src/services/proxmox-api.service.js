@@ -24,6 +24,12 @@ class ProxmoxApiService {
         };
         this.httpService = new http_service_1.HttpService(this.endpoint, httpheaders, this.ticket);
     }
+    set node(value) {
+        this._node = value;
+    }
+    get node() {
+        return this._node;
+    }
     restoreLxcContainer(node, restoreLxcContainerRequest) {
         return __awaiter(this, void 0, void 0, function* () {
             var finalUrl = `/nodes/${node}/lxc`;
@@ -126,6 +132,11 @@ class ProxmoxApiService {
     createLxcContainer(node, lxcContainerRequest) {
         return __awaiter(this, void 0, void 0, function* () {
             var finalUrl = `/nodes/${node}/lxc`;
+            var body = lxcContainerRequest;
+            if (body.hasOwnProperty('sizeGB')) {
+                body['rootfs'] = 'local:' + body['sizeGB'];
+                delete body['sizeGB'];
+            }
             var response = yield this.httpService.post(finalUrl, lxcContainerRequest);
             if (response.code != 200)
                 return null;

@@ -15,6 +15,8 @@ var frameself = new frameself_service_1.FrameselfService('127.0.0.1', 5000);
 const index = express_1.Router();
 /*db Manager*/
 var db = new dbManager_1.DBManager();
+var cors = require('cors');
+index.options('/*', cors());
 /* GET home page. */
 index.get('/', function (req, res, next) {
     db.ajouter_user("coucou", "prout", "Free");
@@ -22,15 +24,66 @@ index.get('/', function (req, res, next) {
     db.associateVmBackupToAnUser("coucou", 130, "/home/zaurelezo");
     console.log("lolilol");
 });
-/* post createVM */
-index.post('/createVM', function (req, res, next) {
+index.get("/User/:login", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("request body" + req.body);
+        var user = yield db.get_user(req.params.login);
+        if (user) {
+            //res.send({"login":user.login,"password":user.password, "typeofUser":user.typeofUser});
+            res.send({ "user": user[0] });
+        }
+        else {
+            res.send({ "User": "ko", "Information": "ko" });
+        }
+    });
+});
+/*add user account*/
+index.post("/createAccount", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var resHasAccount = yield db.hasAnAccount(req.body.login, req.body.password);
+        if (!resHasAccount) {
+            db.ajouter_user(req.body.login, req.body.password, req.body.typeofUser);
+            res.send({ "addUser": "ok", "Information": "Account created" });
+        }
+        else {
+            res.send({ "addUser": "ko", "Information": "Already has an account" });
+        }
+    });
+});
+index.get("/UserVMs/:login", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var listVM = yield db.list_all_vms_user(req.params.login);
+        res.send({ "listVM": listVM });
+    });
+});
+index.get("/VM/:id", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var VM = yield db.getVm(req.params.id);
+        res.send({ "VM": VM[0] });
+    });
+});
+/*sign in*/
+index.post("/signIn", cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("valeur de login" + req.params.login);
+        console.log("valeur de password" + req.params.password);
+        var resHasAccount = yield db.hasAnAccount(req.body.login, req.body.password);
+        if (resHasAccount) {
+            res.send({ "signIn": "ok", "Information": "ok" });
+        }
+        else {
+            res.send({ "signIn": "ko", "Information": "Wrong login or password" });
+        }
+    });
+});
+/* post createVM */
+index.post('/createVM', cors(), function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("================== request body" + req.body);
         //connection
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         //free or premium
-        var typeUser = yield db.getTypeOfUser("coucou");
-        var numberVM = yield db.countUserNbVM("coucou");
+        var typeUser = yield db.getTypeOfUser(req.body.login);
+        var numberVM = yield db.countUserNbVM(req.body.login);
         console.log(".............****************************", typeUser);
         console.log("..............********************************", numberVM);
         if (typeUser == "Free" && numberVM > 0) {
@@ -53,7 +106,11 @@ index.post('/createVM', function (req, res, next) {
                     res.send({ "containerID": -1, "Information": "Fail create vm" });
                 }
                 else {
-                    db.old_ajouter_vm_a_user(req.body.login, ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
+                    //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
+                    //console.log("--------- creation réussi")
+                    var resAdd = db.ajouter_vm_a_user(req.body.login, 'ns3060138', ObjectID.id, false, req.body.login + ObjectID.id.toString());
+                    //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
+                    console.log("------ " + resAdd);
                     res.send({ "containerID": ObjectID.id, "Information": "ok" }); //send back vm creation information
                 }
             }
@@ -147,8 +204,10 @@ index.get("/testFrameself", function (req, res, next) {
             vmid: ObjectID.id,
             password: 'rototoroot',
             memory: 1024,
+            sizeGB: 1
         };
-        frameself.reportCreateLxcContainer('ns3060138', container);
+        proxmoxApi.createLxcContainer('ns3060138', container);
+        //frameself.reportCreateLxcContainer('ns3060138', container);
     });
 });
 Object.defineProperty(exports, "__esModule", { value: true });

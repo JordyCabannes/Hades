@@ -1,0 +1,13 @@
+import frameself.format.*;
+import java.util.Date;
+
+rule "CreateContainerFailedSymptom"
+	when
+		Event(category == "CREATE_CONTAINER_FAILED" , $value: value)
+	then
+		Symptom symptom = new Symptom();
+		symptom.setCategory("CREATE_CONTAINER_FAILED_SYMPTOM");
+		symptom.setValue($value);
+		symptom.setTimestamp(new Date());
+		insert(symptom);
+end

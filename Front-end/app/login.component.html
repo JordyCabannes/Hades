@@ -1,0 +1,30 @@
+<div id="contentLogin" class="col-xs-12">
+	<div class="row">
+		<img id="logoApp" class="col-xs-push-2 col-xs-3 col-sm-push-2 col-sm-3 col-md-push-3 col-md-2 col-lg-push-3 col-lg-2 imgSizeSuperXs imgSizeXs imgSizeXsBis imgSizeSm imgSizeMd imgSizeLg" src="/app/Pictures/hades-logo.png">
+		<div id="nameApp" class="col-xs-push-2 col-xs-4 col-sm-push-2 col-sm-4 col-md-push-3 col-md-2 col-lg-push-3 col-lg-4 textSizeSuperXs textSizeXs textSizeXsBis textSizeSm textSizeMd textSizeLg">HADES</div>
+	</div>
+	<form id="formConnection" class="col-xs-12" method="post">
+		<div class="row">
+		    <div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
+		      	<label for="login">Login</label>
+		      	<input #login type="text" name="login" id="login" class="form-control" required/>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="form-group col-xs-12 col-sm-push-2 col-sm-8 col-md-push-3 col-md-6 col-lg-push-4 col-lg-4">
+		      	<label for="password">Password</label>
+		        <input #password type="password" id="password" class="form-control" name="password" required/>
+		    </div>
+		</div>
+		<button id="Submit" class="btn btn-default btnStyle col-lg-push-4 col-lg-2" type="submit" (click)="signIn(login.value,password.value)">Sign in</button>    
+		<a routerLink="/create-account" routerLinkActive="active" id="createAccount" class="btn btn-default btnStyle col-lg-push-4 col-lg-2">Create account</a>
+	</form>
+</div>
+<div *ngIf="messageResultat" id ="creationAccount" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid">
+	<div class="row">
+		<div *ngIf="error" id="errorDiv">
+			<h2 id="errorTitle">Error : wrong login or password</h2>	
+			<button id="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+		</div>
+	</div>
+</div>

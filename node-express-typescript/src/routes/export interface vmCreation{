@@ -1,0 +1,5 @@
+export interface vmCreation{
+		login: string,
+		password: string,
+		typeofUser: string
+}

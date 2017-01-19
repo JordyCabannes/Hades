@@ -1,0 +1,9 @@
+import frameself.format.*;
+
+rule "Agregate event"
+    when
+       Event($category: category, $timestamp: timestamp)
+       $event: Event(category == $category, timestamp before $timestamp)
+    then
+       retract($event);  
+end

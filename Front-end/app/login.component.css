@@ -1,0 +1,143 @@
+#contentLogin{
+	margin-top: 50vh;
+	transform: translateY(-50%);
+}
+
+
+
+#nameApp{
+  	color: #FFFFFF;
+  	font-family: Arial, Helvetica, sans-serif;
+  	margin-top:20px;
+  	text-align: center;
+  }
+
+#formConnection{
+	text-align:center;
+	color: #FFFFFF;
+}
+
+.btnStyle{
+  background: #000000;
+  color:#FFFFFF;
+  height: 7vh;
+  border : solid 3px #FFFFFF;
+  padding: 0px 12px 0px 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 4vh;
+}
+
+.btnStyle:hover{
+    background: #CCCCCC;
+}
+
+#Submit{
+  margin-left: -5px;
+  margin-right: 5px;
+}
+
+#createAccount{
+  margin-right: -5px;
+  margin-left: 5px;
+}
+
+@media (max-width: 480px) {
+  .imgSizeSuperXs{
+    height: 80px;
+  }
+
+  .textSizeSuperXs{
+    font-size: 40px;
+  }
+}
+
+@media (min-width: 480px) and (max-width:640px) {
+  .imgSizeXs{
+    height: 100px;
+  }
+
+  .textSizeXs{
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 640px) and (max-width:768px) {
+  .imgSizeXsBis{
+    height: 120px;
+  }
+
+  .textSizeXsBis{
+    font-size:60px;
+  }
+}
+
+@media (min-width: 768px) and (max-width:992px) {
+  .imgSizeSm{
+    height: 170px;
+  }
+
+  .textSizeSm{
+    font-size: 90px;
+  }
+}
+
+@media (min-width: 992px) and (max-width:1200px) {
+  .imgSizeMd{
+    height: 180px;
+  }
+
+  .textSizeMd{
+    font-size: 100px;
+  }
+}
+
+@media (min-width: 1200px){
+  .imgSizeLg{
+    height: 200px;
+  }
+
+  .textSizeLg{
+    font-size: 120px;
+  }
+}
+
+
+
+#creationAccount{ 
+  background: #FFFFFF; 
+  color:#000000; 
+  height:40vh; 
+  box-shadow: 4px 4px 6px #aaa; 
+  margin-top:30vh;
+  transform: translateY(-50%); 
+  margin-left: 50vw; 
+  transform: translateX(-50%);
+  position: absolute;
+  z-index: 1;
+}
+
+h2{
+  text-align:left; 
+  margin-left:5px; 
+  color:#369;
+}
+
+
+#errorTitle{
+  text-align:center;
+}
+
+#errorDiv{
+  margin-top:10vh;
+  transform: translateY(-50%);
+}
+
+#successTitle{
+  text-align:center;
+}
+
+#successDiv{
+  margin-top:10vh;
+  transform: translateY(-50%);
+}
+
