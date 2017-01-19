@@ -186,4 +186,29 @@ index.get("/testFrameself",async function(req, res, next)
 });
 
 
+
+/*createBackup
+théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
+index.post("/startVM", async function(req, res, next) 
+{
+    //connection
+    var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
+
+    if (proxmoxApi==null)
+    {
+        res.send({"Information":"Fail connection server"});
+    }else
+    {
+        //TODO : voir plus tard le field node quand on travaillera sur ovh
+        var startVMResult : IUpidReply = await proxmoxApi.startLxcContainer('ns3060138', req.body.vmid);
+        if (startVMResult==null)
+        {
+            res.send({"Information":"Fail create backup"});
+        }else
+        {
+            res.send({"Information":"ok"});
+        }
+    }
+});
+
 export default index;
