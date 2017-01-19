@@ -259,7 +259,7 @@ index.get("/testFrameself",async function(req, res, next)
 
 
 
-/*createBackup
+/*startVm
 théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
 index.post("/startVM", async function(req, res, next) 
 {
