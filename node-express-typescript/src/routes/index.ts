@@ -178,7 +178,7 @@ index.get("/monitoring/:vmid",async function(req, res, next)
 
 /*createBackup
 théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
-index.post("/createBackup", async function(req, res, next) 
+index.get("/createBackup/:id", cors(),async function(req, res, next) 
 {
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
@@ -189,7 +189,7 @@ index.post("/createBackup", async function(req, res, next)
     }else
     {
         //TODO : voir plus tard le field node quand on travaillera sur ovh
-        var createBackupResult : IUpidReply = await proxmoxApi.createContainerBackup('ns3060138', req.body.vmid);
+        var createBackupResult : IUpidReply = await proxmoxApi.createContainerBackup('ns3060138', req.params.id);
         if (createBackupResult==null)
         {
             res.send({"Information":"Fail create backup"});
@@ -284,7 +284,7 @@ index.get("/startVM/:id", cors(),async function(req, res, next)
 });
 
 /*stopVM: arrête un container*/
-index.post("/stopVM/:id", cors(),async function(req, res, next) 
+index.get("/stopVM/:id", cors(),async function(req, res, next)
 {
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();

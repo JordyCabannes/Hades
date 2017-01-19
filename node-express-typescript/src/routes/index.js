@@ -222,7 +222,7 @@ index.get("/startVM/:id", cors(), function (req, res, next) {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
             var startVMResult = yield proxmoxApi.startLxcContainer('ns3060138', req.params.id);
             if (startVMResult == null) {
-                res.send({ "Information": "Fail create backup" });
+                res.send({ "Information": "Fail start Vm" });
             }
             else {
                 res.send({ "Information": "ok" });
@@ -231,7 +231,7 @@ index.get("/startVM/:id", cors(), function (req, res, next) {
     });
 });
 /*stopVM: arrête un container*/
-index.post("/stopVM/:id", cors(), function (req, res, next) {
+index.get("/stopVM/:id", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         //connection
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
@@ -241,7 +241,7 @@ index.post("/stopVM/:id", cors(), function (req, res, next) {
         else {
             var stopVMResult = yield proxmoxApi.stopLxcContainer('ns3060138', req.params.id);
             if (stopVMResult == null) {
-                res.send({ "Information": "Fail create backup" });
+                res.send({ "Information": "Fail stop Vm" });
             }
             else {
                 res.send({ "Information": "ok" });
