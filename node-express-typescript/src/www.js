@@ -2,6 +2,7 @@
 const app_1 = require("./app");
 const debugModule = require("debug");
 const http = require("http");
+const frameself_dispatcher_1 = require("./routes/frameself-dispatcher");
 const debug = debugModule('node-express-typescript:server');
 // Get port from environment and store in Express.
 const port = 3001;
@@ -45,6 +46,6 @@ function onListening() {
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
-//const frameselfServer = new FrameselfDispatcher('127.0.0.1', 6000, 7000);
-//frameselfServer.startServer(); 
+const frameselfServer = new frameself_dispatcher_1.FrameselfDispatcher('127.0.0.1', 6000, 7000);
+frameselfServer.startServer();
 //# sourceMappingURL=www.js.map

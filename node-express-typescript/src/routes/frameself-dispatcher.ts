@@ -2,6 +2,9 @@ import {Socket} from "dgram";
 import {UdpService} from "../services/udp.service";
 import {IFrameselfAction} from "../interfaces/frameself-action.interface";
 import {ProxmoxUtils} from "../utils/proxmox.utils";
+import {IGetClusterVmNextIdReply} from "../interfaces/get-cluster-vm-next-id-reply.interface";
+import {ICreateLxcContainerRequest} from "../interfaces/create-lxc-container-request.interface";
+import {ProxmoxApiService} from "../services/proxmox-api.service";
 /**
  * Created by Halim on 14/01/2017.
  */
@@ -27,7 +30,6 @@ export class FrameselfDispatcher {
     public startServer()
     {
         this.udpSocket = dgram.createSocket('udp4');
-
         this.udpSocket.on('listening', function () {
             var uaddress = this.udpSocket.address();
             console.log('Frameself dispatcher listening on ' + uaddress.address + ":" + uaddress.port);
@@ -46,23 +48,35 @@ export class FrameselfDispatcher {
         if(action.attributes.length > 0)
             data = JSON.parse(action.attributes[0].value);
 
-        console.log(data);
-        var proxmoxApi = await ProxmoxUtils.getPromoxApi();
+        var proxmoxApi : ProxmoxApiService = null;
 
-        /*
-            if(action.category == "CREATE")
+        if(action.category == "CREATE_CONTAINER_ACTION")
+        {
+            if(data['node'] = 'ns3060138') //ovh1
             {
-                proxmoxApi.createLxcContainer(...);
+                data.ostemplate = 'local:vztmpl/debian-8.0-standard_8.6-1_amd64.tar.gz';//alors ovh2
+                proxmoxApi = await ProxmoxUtils.getPromoxApi2();
             }
-            else if(...)
+            else
             {
-                ...
+                data.ostemplate = 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz';
+                proxmoxApi = await ProxmoxUtils.getPromoxApi();
             }
-        */
+            delete data['node'];
 
-        this.udpService.send(action);
+            var ObjectID  :IGetClusterVmNextIdReply = await proxmoxApi.getClusterVmNextId();
+            data.vmid = ObjectID.id;
+
+            var result = await proxmoxApi.createLxcContainer(proxmoxApi.node, data);
+
+            if(result == null)
+                action.result = 'FAILURE';
+            else
+                action.result = "SUCCESS";
+
+            this.udpService.send(action);
+        }
+
+
     }
 }
-
-
-

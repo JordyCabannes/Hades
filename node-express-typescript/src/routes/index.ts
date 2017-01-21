@@ -23,7 +23,7 @@ index.options('/*', cors());
 
 
 /* GET home page. */
-index.get('/', function(req, res, next) 
+index.get('/', function(req, res, next)
 {
     db.ajouter_user("coucou", "prout", "Free");
     db.old_ajouter_vm_a_user('coucou', 130); //changer plus tard pour ajouter_vm_a_user()
@@ -39,9 +39,9 @@ index.get("/User/:login",cors(), async function(req, res, next)
     {
         //res.send({"login":user.login,"password":user.password, "typeofUser":user.typeofUser});
         res.send({"user":user[0]});
-    }else 
+    }else
     {
-       
+
         res.send({"User":"ko","Information":"ko"});
     }
 });
@@ -53,11 +53,11 @@ index.post("/createAccount", cors(), async function(req, res, next)
     var resHasAccount = await db.hasAnAccount(req.body.login,req.body.password);
     if (!resHasAccount)
     {
-         db.ajouter_user(req.body.login,req.body.password,req.body.typeofUser);
-         res.send({"addUser":"ok","Information":"Account created"});
-    }else 
+        db.ajouter_user(req.body.login,req.body.password,req.body.typeofUser);
+        res.send({"addUser":"ok","Information":"Account created"});
+    }else
     {
-       
+
         res.send({"addUser":"ko","Information":"Already has an account"});
     }
 });
@@ -66,7 +66,7 @@ index.post("/createAccount", cors(), async function(req, res, next)
 index.get("/UserVMs/:login",cors(), async function(req, res, next)
 {
     var listVM = await  db.list_all_vms_user(req.params.login);
-   
+
     res.send({"listVM":listVM});
 
 });
@@ -95,7 +95,7 @@ index.post("/signIn", cors(), async function(req, res, next)
 });
 
 /* post createVM */
-index.post('/createVM', cors(), async function(req, res, next) 
+index.post('/createVM', cors(), async function(req, res, next)
 {
     console.log("================== request body" + req.body);
     //connection
@@ -111,23 +111,23 @@ index.post('/createVM', cors(), async function(req, res, next)
         res.send({"containerID":-1,"Information":"Cannot create more vm"})
     }else
     {
-   
-        if(proxmoxApi != null) 
+
+        if(proxmoxApi != null)
         {
             var ObjectID  :IGetClusterVmNextIdReply  = await  proxmoxApi.getClusterVmNextId() ;
 
             //TODO: gérer plus tard  le fait que l'user premium doit spécifier le nb de coeur
-            //Note Nicolas : L'user devrait spécifier un Flavor parmi ceux prédéfinis, et on récupère les caractéristiques du flavor dans la BDD. 
-            var container : ICreateLxcContainerRequest = 
-            {
-                ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-                vmid : ObjectID.id,
-                password : req.body.password,
-                memory:req.body.memory,
-            }
-            
+            //Note Nicolas : L'user devrait spécifier un Flavor parmi ceux prédéfinis, et on récupère les caractéristiques du flavor dans la BDD.
+            var container : ICreateLxcContainerRequest =
+                {
+                    ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+                    vmid : ObjectID.id,
+                    password : req.body.password,
+                    memory:req.body.memory
+                }
+
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var result : IUpidReply = await proxmoxApi.createLxcContainer('ns3060138',container);
+            var result : IUpidReply = await proxmoxApi.createLxcContainer(proxmoxApi.node,container);
             if (result==null)
             {
                 res.send({"containerID":-1,"Information":"Fail create vm"})
@@ -135,16 +135,16 @@ index.post('/createVM', cors(), async function(req, res, next)
             {
                 //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
                 //console.log("--------- creation réussi")
-                var resAdd = db.ajouter_vm_a_user(req.body.login, 'ns3060138', ObjectID.id, false,req.body.login+ObjectID.id.toString());
+                var resAdd = db.ajouter_vm_a_user(req.body.login, proxmoxApi.node, ObjectID.id, false,req.body.login+ObjectID.id.toString());
                 //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
                 console.log("------ "+resAdd);
                 res.send({"containerID":ObjectID.id,"Information":"ok"});//send back vm creation information
             }
 
-            
-        }else 
+
+        }else
         {
-             res.send({"containerID":-1,"Information":"Fail connection server"})
+            res.send({"containerID":-1,"Information":"Fail connection server"})
         }
     }
 });
@@ -158,17 +158,17 @@ index.get("/monitoring/:vmid",cors(),async function(req, res, next)
     if (proxmoxApi!=null)
     {
         //TODO : voir plus tard le field node quand on travaillera sur ovh
-        var monitoringResult :IGetContainerStatusReply =  await proxmoxApi.getContainerStatus('ns3060138', req.params.vmid);
+        var monitoringResult :IGetContainerStatusReply =  await proxmoxApi.getContainerStatus(proxmoxApi.node, req.params.vmid);
 
         if (monitoringResult==null)
         {
             res.send({"Information":"Fail get monitoring informations"});
-        }else 
+        }else
         {
             monitoringResult["Information"]="ok";
             res.send(monitoringResult);
         }
-    }else 
+    }else
     {
         res.send({"Information":"Fail connection server"});
     }
@@ -177,8 +177,8 @@ index.get("/monitoring/:vmid",cors(),async function(req, res, next)
 
 
 /*createBackup
-théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
-index.get("/createBackup/:id", cors(),async function(req, res, next) 
+ théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
+index.get("/createBackup/:id", cors(),async function(req, res, next)
 {
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
@@ -189,7 +189,7 @@ index.get("/createBackup/:id", cors(),async function(req, res, next)
     }else
     {
         //TODO : voir plus tard le field node quand on travaillera sur ovh
-        var createBackupResult : IUpidReply = await proxmoxApi.createContainerBackup('ns3060138', req.params.id);
+        var createBackupResult : IUpidReply = await proxmoxApi.createContainerBackup(proxmoxApi.node, req.params.id);
         if (createBackupResult==null)
         {
             res.send({"Information":"Fail create backup"});
@@ -204,8 +204,8 @@ index.get("/createBackup/:id", cors(),async function(req, res, next)
 
 
 /*restore backup
-TODO: vm doit être éteinte pour pouvoir faire la backup*/
-index.post("/restoreBackup", async function(req, res, next)  
+ TODO: vm doit être éteinte pour pouvoir faire la backup*/
+index.post("/restoreBackup", async function(req, res, next)
 {
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
 
@@ -214,26 +214,26 @@ index.post("/restoreBackup", async function(req, res, next)
         res.send({"Information":"Fail connection server"});
     }else
     {
-        var restoreLxcContainer = 
-        {
-            vmid : 100,
-            ostemplate:'/custom/backups/dump/vzdump-lxc-102-2017_01_12-22_43_28.tar.lzo'
-        }
+        var restoreLxcContainer =
+            {
+                vmid : 100,
+                ostemplate:'/custom/backups/dump/vzdump-lxc-102-2017_01_12-22_43_28.tar.lzo'
+            }
         var resHasBackup = await  db.hasBackupAssociateWithVm("coucou",130);
-        
+
         if(resHasBackup)
         {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var restoreLxcContainerResult : IUpidReply  = await  proxmoxApi.restoreLxcContainer('ns3060138', restoreLxcContainer) ;
+            var restoreLxcContainerResult : IUpidReply  = await  proxmoxApi.restoreLxcContainer(proxmoxApi.node, restoreLxcContainer) ;
             if (restoreLxcContainerResult!=null)
             {
                 res.send({"Information":"ok"});
-            }else 
+            }else
             {
                 res.send({"Information":"Fail to restore"})
             }
-            
-        }else 
+
+        }else
         {
             res.send({"Information":"Need to have a backup if want to restore"});
         }
@@ -243,25 +243,25 @@ index.post("/restoreBackup", async function(req, res, next)
 index.get("/testFrameself",async function(req, res, next)
 {
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
-    //proxmoxApi.shutdownLxcContainer('ns3060138', 111);
-    var ObjectID  :IGetClusterVmNextIdReply  = await proxmoxApi.getClusterVmNextId() ;
-    var container : ICreateLxcContainerRequest =
-        {
-            ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-            vmid : ObjectID.id,
-            password : 'rototoroot',
-            memory:1024,
-            sizeGB : 1
-        }
-    proxmoxApi.createLxcContainer('ns3060138', container);
-    //frameself.reportCreateLxcContainer('ns3060138', container);
+    var ObjectID  :IGetClusterVmNextIdReply  = await proxmoxApi.getClusterVmNextId();
+    var container : ICreateLxcContainerRequest = {
+        ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
+        vmid : 100,
+        password : 'tototo',
+        memory:1024,
+        sizeGB : 1
+    };
+
+    var result = await proxmoxApi.createLxcContainer(proxmoxApi.node, container);
+    if(result == null)
+        frameself.reportCreateLxcContainer(proxmoxApi.node, container);
 });
 
 
 
 
 /*startVM: start un container*/
-index.get("/startVM/:id", cors(),async function(req, res, next) 
+index.get("/startVM/:id", cors(),async function(req, res, next)
 {
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();
@@ -272,7 +272,7 @@ index.get("/startVM/:id", cors(),async function(req, res, next)
     }else
     {
         //TODO : voir plus tard le field node quand on travaillera sur ovh
-        var startVMResult : IUpidReply = await proxmoxApi.startLxcContainer('ns3060138', req.params.id);
+        var startVMResult : IUpidReply = await proxmoxApi.startLxcContainer(proxmoxApi.node, req.params.id);
         if (startVMResult==null)
         {
             res.send({"Information":"Fail start Vm"});
@@ -294,7 +294,7 @@ index.get("/stopVM/:id", cors(),async function(req, res, next)
         res.send({"Information":"Fail connection server"});
     }else
     {
-        var stopVMResult : IUpidReply = await proxmoxApi.stopLxcContainer('ns3060138', req.params.id);
+        var stopVMResult : IUpidReply = await proxmoxApi.stopLxcContainer(proxmoxApi.node, req.params.id);
         if (stopVMResult==null)
         {
             res.send({"Information":"Fail stop Vm"});
@@ -304,7 +304,5 @@ index.get("/stopVM/:id", cors(),async function(req, res, next)
         }
     }
 });
-
-
 
 export default index;
