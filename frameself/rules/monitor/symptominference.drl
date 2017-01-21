@@ -6,7 +6,7 @@ rule "CreateContainerFailedSymptom"
 		Event(category == "CREATE_CONTAINER_FAILED" , $value: value)
 	then
 		Symptom symptom = new Symptom();
-		symptom.setCategory("CREATE_CONTAINER_FAILED_SYMPTOM");
+		symptom.setCategory("OVH_DOWN_CREATE_CONTAINER");
 		symptom.setValue($value);
 		symptom.setTimestamp(new Date());
 		insert(symptom);

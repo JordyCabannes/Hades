@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 rule "CreateContainerFailedAction"
     when
-       Rfc(category == "CREATE_CONTAINER_FAILED_RFC", $value : value)
+       Rfc(category == "TRY_OTHER_OVH_CREATE_CONTAINER", $value : value)
     then 
 	   ArrayList<Attribute> attributes = new ArrayList<Attribute>();
    	   attributes.add(new Attribute("value", $value));
    	   Action action = new Action();
 	   action.setAttributes(attributes);
-   	   action.setCategory("CREATE_CONTAINER_FAILED_ACTION");
+   	   action.setCategory("CREATE_CONTAINER_ACTION");
    	   action.setTimestamp(new Date());
-	   action.setName("CREATE");
-	   action.setEffector(new Effector("LOL"));
+	   action.setName("CREATE_CONTAINER");
+	   action.setEffector(new Effector("BACKEND"));
        insert(action);
 end
 

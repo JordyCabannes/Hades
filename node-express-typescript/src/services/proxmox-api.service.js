@@ -137,7 +137,7 @@ class ProxmoxApiService {
                 body['rootfs'] = 'local:' + body['sizeGB'];
                 delete body['sizeGB'];
             }
-            body['net0'] = `bridge=vmbr3,name=eth0,ip=192.168.2.${lxcContainerRequest.vmid}/24,gw=192.168.2.254}`;
+            body['net0'] = `bridge=vmbr3,name=eth0,ip=192.168.2.${lxcContainerRequest.vmid}/24,gw=192.168.2.254`;
             var response = yield this.httpService.post(finalUrl, body);
             if (response.code != 200)
                 return null;

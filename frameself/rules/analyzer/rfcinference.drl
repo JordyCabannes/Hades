@@ -3,10 +3,10 @@ import java.util.Date;
 
 rule "CreateContainerFailedRfc"
 	when
-		Symptom(category == "CREATE_CONTAINER_FAILED_SYMPTOM", $value: value)
+		Symptom(category == "OVH_DOWN_CREATE_CONTAINER", $value: value)
 	then
 		Rfc rfc = new Rfc();
-		rfc.setCategory("CREATE_CONTAINER_FAILED_RFC");
+		rfc.setCategory("TRY_OTHER_OVH_CREATE_CONTAINER");
 		rfc.setValue($value);
 		rfc.setTimestamp(new Date());
 		insert(rfc);

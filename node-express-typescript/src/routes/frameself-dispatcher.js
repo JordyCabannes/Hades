@@ -56,8 +56,8 @@ class FrameselfDispatcher {
                     action.result = 'FAILURE';
                 else
                     action.result = "SUCCESS";
+                this.udpService.send(action);
             }
-            this.udpService.send(action);
         });
     }
 }
