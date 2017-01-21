@@ -146,7 +146,7 @@ index.get("/monitoring/:vmid", cors(), function (req, res, next) {
 });
 /*createBackup
  théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
-index.get("/createBackup/:id", cors(), function (req, res, next) {
+index.post("/createBackup", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         //connection
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
@@ -154,14 +154,20 @@ index.get("/createBackup/:id", cors(), function (req, res, next) {
             res.send({ "Information": "Fail connection server" });
         }
         else {
+            var resDelete = null;
+            var resHasBackup = yield db.hasBackupAssociateWithVm(req.body.login, req.body.id);
+            if (resHasBackup) {
+                resDelete = yield db.deleteBakUp(req.body.login, req.body.id);
+            }
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var createBackupResult = yield proxmoxApi.createContainerBackup(proxmoxApi.node, req.params.id);
+            var createBackupResult = yield proxmoxApi.createContainerBackup(proxmoxApi.node, req.body.id);
+            //console.log(createBackupResult);
             if (createBackupResult == null) {
                 res.send({ "Information": "Fail create backup" });
             }
             else {
                 //sauvegarde de la backup dans la bdd
-                db.associateVmBackupToAnUser(req.body.login, req.body.vmid, createBackupResult[" backup"]);
+                db.associateVmBackupToAnUser(req.body.login, req.body.id, createBackupResult["backup"]);
                 res.send({ "Information": "ok" });
             }
         }
@@ -169,26 +175,32 @@ index.get("/createBackup/:id", cors(), function (req, res, next) {
 });
 /*restore backup
  TODO: vm doit être éteinte pour pouvoir faire la backup*/
-index.post("/restoreBackup", function (req, res, next) {
+index.post("/restoreBackup", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         if (proxmoxApi == null) {
             res.send({ "Information": "Fail connection server" });
         }
         else {
-            var restoreLxcContainer = {
-                vmid: 100,
-                ostemplate: '/custom/backups/dump/vzdump-lxc-102-2017_01_12-22_43_28.tar.lzo'
-            };
-            var resHasBackup = yield db.hasBackupAssociateWithVm("coucou", 130);
+            var resHasBackup = yield db.hasBackupAssociateWithVm(req.body.login, req.body.id);
             if (resHasBackup) {
+                var id = +req.body.id;
                 //TODO : voir plus tard le field node quand on travaillera sur ovh
+                var pathBackup = yield db.getBackupPath(req.body.login, id);
+                console.log("------------------------- login : " + req.body.login);
+                console.log("------------------------- pathBackup : " + pathBackup['backupPath']);
+                console.log("------------------------- vmid : " + id);
+                var restoreLxcContainer = {
+                    vmid: req.body.id,
+                    ostemplate: pathBackup['backupPath']
+                };
                 var restoreLxcContainerResult = yield proxmoxApi.restoreLxcContainer(proxmoxApi.node, restoreLxcContainer);
                 if (restoreLxcContainerResult != null) {
                     res.send({ "Information": "ok" });
                 }
                 else {
-                    res.send({ "Information": "Fail to restore" });
+                    //res.send({"Information":"Fail to restore"});
+                    res.send(pathBackup);
                 }
             }
             else {

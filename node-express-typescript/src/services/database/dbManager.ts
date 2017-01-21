@@ -379,11 +379,23 @@ export class DBManager
     /*Récupère le path d'un backup*/
     public async getBackupPath(login: string, vmid: number): Promise <string> {
         var functionhasBackup = async function(db) {
-             var res = await db.collection('backups').find({"owner": login, "vmid": vmid}, {"_id":0, "backupPath":1}).toArray();
+             var res = await db.collection('backups').find({"owner": login, "vmid": +vmid}, {"_id":0, "backupPath":1}).next();
              return res;
         }
         var db = await MongoClient.connect(this.url);
         var result = await functionhasBackup(db);
+        db.close();
+        return result;
+    }
+
+    /*Supprime la dernière backup pour la remplacer par la nouvelle*/
+    public async deleteBakUp(login: string, vmid: number): Promise <string> {
+        var functiondeleteBackup = async function(db) {
+             var res = await db.collection('backups').remove({"owner": login, "vmid": vmid});
+             return res;
+        }
+        var db = await MongoClient.connect(this.url);
+        var result = await functiondeleteBackup(db);
         db.close();
         return result;
     }

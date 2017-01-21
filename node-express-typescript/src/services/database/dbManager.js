@@ -394,12 +394,27 @@ class DBManager {
         return __awaiter(this, void 0, void 0, function* () {
             var functionhasBackup = function (db) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    var res = yield db.collection('backups').find({ "owner": login, "vmid": vmid }, { "_id": 0, "backupPath": 1 }).toArray();
+                    var res = yield db.collection('backups').find({ "owner": login, "vmid": +vmid }, { "_id": 0, "backupPath": 1 }).next();
                     return res;
                 });
             };
             var db = yield MongoClient.connect(this.url);
             var result = yield functionhasBackup(db);
+            db.close();
+            return result;
+        });
+    }
+    /*Supprime la dernière backup pour la remplacer par la nouvelle*/
+    deleteBakUp(login, vmid) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var functiondeleteBackup = function (db) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    var res = yield db.collection('backups').remove({ "owner": login, "vmid": vmid });
+                    return res;
+                });
+            };
+            var db = yield MongoClient.connect(this.url);
+            var result = yield functiondeleteBackup(db);
             db.close();
             return result;
         });

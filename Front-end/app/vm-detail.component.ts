@@ -50,11 +50,24 @@ export class VmDetailComponent implements OnInit{
   @Input()
   public diskWrite:string;
 
+  @Input()
+  public backUpCreated:boolean=false;
+
+  @Input()
+  public errorBackUpCreation:boolean=false;
+
+  @Input()
+  public backUpRestored:boolean=false;
+
+  @Input()
+  public errorBackUpRestoring:boolean=false;
+
   public displayMessageBoxStart:boolean=false;
   public displayMessageBoxStop:boolean=false;
   public displayMessageBoxBackUp:boolean=false;
   public displayMessageBoxBackUpPleaseStopVM:boolean=false;
   public displayMessageBoxConsolePleaseStartVM:boolean=false;
+  public displayMessageBackUpResult:boolean=false;
 
 
   public vmIsStart:boolean=false;
@@ -165,6 +178,38 @@ export class VmDetailComponent implements OnInit{
     if(this.vmIsStart || this.errorAlreadyStart){
       this.displayMessageBoxBackUpPleaseStopVM=true;
     }
+    else{
+      this.boxWait=true;
+      this.route.params
+      .switchMap((params:Params) => this.vmService.restoreBackUp(this.vm.owner, +params['id']))
+      .subscribe(res=>{
+        this.boxWait=false;
+        this.displayMessageBackUpResult=true;
+        if(res.Information=="ok"){
+          this.backUpRestored=true;
+        }
+        else{
+          this.errorBackUpRestoring=true;
+        }
+      });
+    }
+  }
+
+  createBackUp(){
+    this.boxWait=true;
+    console.log(this.vm.owner);
+      this.route.params
+      .switchMap((params:Params) => this.vmService.createBackUp(this.vm.owner, +params['id']))
+      .subscribe(res=>{
+        this.boxWait=false;
+        this.displayMessageBackUpResult=true;
+        if(res.Information=="ok"){
+          this.backUpCreated=true;
+        }
+        else{
+          this.errorBackUpCreation=true;
+        }
+      });
   }
 
   back(){
@@ -173,6 +218,11 @@ export class VmDetailComponent implements OnInit{
     this.displayMessageBoxBackUp=false;
     this.displayMessageBoxBackUpPleaseStopVM=false;
     this.displayMessageBoxConsolePleaseStartVM=false;
+    this.displayMessageBackUpResult=false;
+    this.backUpCreated=false;
+    this.errorBackUpCreation=false;
+    this.errorBackUpRestoring=false;
+    this.backUpRestored=false;
   }
 
     public openTabConsole(): void {

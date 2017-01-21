@@ -5,10 +5,35 @@
 				<div class="row">
 					<h2>Back up</h2>
 					<div id="BtnsBackUp" class="col-xs-12">	
-						<button id="createBakup" class="btn btn-default col-xs-push-1 col-xs-4" (click)="back()">Create Backup</button>
-						<button id="restoreBackup" class="btn btn-default col-xs-push-3 col-xs-4" (click)="restoreVm()">Restore VM</button>
+						<div class="row">
+							<button id="createBakup" class="btn btn-default col-xs-push-1 col-xs-4" (click)="createBackUp()">Create Backup</button>
+							<button id="restoreBackup" class="btn btn-default col-xs-push-3 col-xs-4" (click)="restoreVm()">Restore VM</button>
+						</div>
+						<div class="row">
+							<a id="cancel" class="btn btn-default col-xs-push-5 col-xs-2" (click)="back()">Cancel</a>
+						</div>
 					</div>
 				</div>      
+			</div>
+			<div *ngIf="displayMessageBackUpResult" id ="detailCreationBackUp" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid boxInfo">
+				<div class="row">
+					<div *ngIf="errorBackUpCreation" id="errorDivFailStop" class="errorDivFail">
+						<h2 class="errorTitle">Error : backup creation did not work</h2>	
+						<button class="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+					</div>
+					<div *ngIf="backUpCreated" id="successDivStopped" class="successDiv">
+						<h2 class="successTitle">Backup is created</h2>	
+						<button class="quitSuccessPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+					</div>
+					<div *ngIf="errorBackUpRestoring" id="errorDivFailStop" class="errorDivFail">
+						<h2 class="errorTitle">Error : restore did not work</h2>	
+						<button class="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+					</div>
+					<div *ngIf="backUpRestored" id="successDivStopped" class="successDiv">
+						<h2 class="successTitle">Vm is restored</h2>	
+						<button class="quitSuccessPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
+					</div>
+				</div>
 			</div>
 			<div *ngIf="displayMessageBoxBackUpPleaseStopVM" id ="boxStopVmBackUp" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid boxInfo">
 				<div class="row">

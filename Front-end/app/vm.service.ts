@@ -95,4 +95,24 @@ export class VmService {
         })
         .catch(this.handleError);
   }
+
+  public createBackUp(login:string, id: number){
+    return this.http
+        .post(this.vmsUrl+'/createBackup', JSON.stringify({'login': login,'id': id}), {headers: this.headers})
+        .map(function(res) {
+          console.log(res.json());
+          return res.json();
+        })
+        .catch(this.handleError);
+  }
+
+  public restoreBackUp(login:string, id: number){
+    return this.http
+        .post(this.vmsUrl+'/restoreBackup', JSON.stringify({'login': login,'id': id}), {headers: this.headers})
+        .map(function(res) {
+          console.log(res.json());
+          return res.json();
+        })
+        .catch(this.handleError);
+  }
 }
