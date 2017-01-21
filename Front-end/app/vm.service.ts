@@ -4,12 +4,16 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Vm } from './vm';
+import {UrlBackEnd} from './urlBackEnd';
 
 
 @Injectable()
 export class VmService {
 	
-	private vmsUrl = 'http://127.0.0.1:3001';
+  private urlBackEnd:UrlBackEnd = new UrlBackEnd();
+
+	//private vmsUrl = 'http://127.0.0.1:3001';
+  private vmsUrl = this.urlBackEnd.getValue();
 
 	private headers = new Headers({'Content-Type': 'application/json'});
 

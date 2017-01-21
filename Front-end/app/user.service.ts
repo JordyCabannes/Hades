@@ -4,12 +4,18 @@ import { Headers, Http, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { User } from './user';
+import {UrlBackEnd} from './urlBackEnd';
 
 
 @Injectable()
 export class UserService {
-	
-	private usersUrl = 'http://127.0.0.1:3001';
+
+  private urlBackEnd:UrlBackEnd= new UrlBackEnd();
+
+  //private usersUrl = 'http://127.0.0.1:3001';
+  private usersUrl = this.urlBackEnd.getValue();
+
+
 
 	private headers = new Headers({'Content-Type': 'application/json'});
 
@@ -31,6 +37,7 @@ export class UserService {
   	}
 
     public get(login: string, password: string){
+      console.log(this.usersUrl);
       return this.http
         .post(this.usersUrl+'/signIn', JSON.stringify({'login': login,'password': password}), {headers: this.headers})
         .map(function(res) {

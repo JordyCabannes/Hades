@@ -152,8 +152,6 @@ export class VmDetailComponent implements OnInit{
         this.vmIsStop=true;
         this.errorNotStarted=false;
         this.errorStop=false;
-        this.i=0;
-        this.iH=0;
       }
       else{
         if(!this.vmIsStart){
