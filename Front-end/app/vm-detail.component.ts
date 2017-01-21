@@ -254,11 +254,11 @@ export class VmDetailComponent implements OnInit{
             this.usageRam=this.vmMonitoring.mem.toFixed(3)+" Mo";
 
             this.vmMonitoring.maxdisk=this.vmMonitoring.maxdisk/1000000;
-            this.maxdisk=this.vmMonitoring.maxdisk.toFixed(3)+" Mo";
+            this.maxdisk=this.vmMonitoring.maxdisk.toFixed(3)+" Go";
             this.vmMonitoring.disk=this.vmMonitoring.disk/1000000;
-            this.usageDisk=this.vmMonitoring.disk.toFixed(3)+" Mo";
-            this.diskRead = ((+this.vmMonitoring.diskread)/1000000).toFixed(3)+" Mo";
-            this.diskWrite = ((+this.vmMonitoring.diskwrite)/1000000).toFixed(3)+" Mo";
+            this.usageDisk=this.vmMonitoring.disk.toFixed(3)+" Go";
+            this.diskRead = ((+this.vmMonitoring.diskread)/1000000).toFixed(3)+" Go";
+            this.diskWrite = ((+this.vmMonitoring.diskwrite)/1000000).toFixed(3)+" Go";
           
             var minutesAux=0;
 
