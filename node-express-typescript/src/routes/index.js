@@ -121,7 +121,7 @@ index.post('/createVM', cors(), function (req, res, next) {
     });
 });
 /* monitoring */
-index.get("/monitoring/:vmid", function (req, res, next) {
+index.get("/monitoring/:vmid", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         //connection
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();

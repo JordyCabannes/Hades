@@ -62,15 +62,27 @@
 		</div>
 		<div class="row">
 			<div id="cpuDetail" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 cadreMain">
-				<h4>CPU details</h4>
+				<h3>CPU details</h3>
+				<div *ngIf="vmMonitoring" class="divInfos">
+					<p class="CPUDetails">Status CT : {{vmMonitoring.status}}</p>
+					<p class="CPUDetails">Uptime :    {{upTimeDate}}</p>
+					<p class="CPUDetails">CPU usage : {{usageCPU}}%</p>
+					<p class="CPUDetails">Nb cores :  {{vmMonitoring.cpus}}</p>
+				</div>
 			</div> 
 			<div id="ramDetail" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 cadreMain">
-				<h4>RAM detail</h4>
+				<h3>RAM detail</h3>
+				<div *ngIf="vmMonitoring" class="divInfos">
+					<p class="CPUDetails">Memory usage: {{usageRam}}</p>
+					<p class="CPUDetails">Max memory : {{maxRam}}</p>
+					<p class="CPUDetails">Memory Swap : {{vmMonitoring.swap}}%</p>
+					<p class="CPUDetails">Max Swap :  {{vmMonitoring.maxswap}}</p>
+				</div>
 			</div>
 		</div>
 		<div id="subDetails" class="row">
 			<div id="storageDetail" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 cadreMain">
-				<h4>Storage detail</h4>
+				<h3>Storage detail</h3>
 			</div>
 			<div id="btnsVm" class="cadreMain col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				<div class="container-fluid">

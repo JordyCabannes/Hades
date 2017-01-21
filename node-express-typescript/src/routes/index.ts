@@ -151,7 +151,7 @@ index.post('/createVM', cors(), async function(req, res, next)
 
 
 /* monitoring */
-index.get("/monitoring/:vmid",async function(req, res, next) 
+index.get("/monitoring/:vmid",cors(),async function(req, res, next) 
 {
     //connection
     var proxmoxApi : ProxmoxApiService = await ProxmoxUtils.getPromoxApi();

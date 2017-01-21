@@ -85,4 +85,15 @@ export class VmService {
         })
         .catch(this.handleError);
   }
+
+  public monitoring(id: number){
+    const url = `${this.vmsUrl + '/monitoring'}/${id}`;
+    console.log(url);
+      return this.http.get(url)
+        .map(function(response) {
+          console.log(response.json());
+          return response.json();
+        })
+        .catch(this.handleError);
+  }
 }
