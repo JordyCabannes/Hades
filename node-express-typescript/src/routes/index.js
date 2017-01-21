@@ -39,7 +39,8 @@ index.get("/User/:login", cors(), function (req, res, next) {
 /*add user account*/
 index.post("/createAccount", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        var resHasAccount = yield db.hasAnAccount(req.body.login, req.body.password);
+        var resHasAccount = yield db.accountExists(req.body.login);
+        console.log(resHasAccount);
         if (!resHasAccount) {
             db.ajouter_user(req.body.login, req.body.password, req.body.typeofUser);
             res.send({ "addUser": "ok", "Information": "Account created" });
@@ -98,7 +99,9 @@ index.post('/createVM', cors(), function (req, res, next) {
                     ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
                     vmid: ObjectID.id,
                     password: req.body.password,
-                    memory: req.body.memory
+                    memory: req.body.memory,
+                    sizeGB: req.body.disk,
+                    cores: req.body.cpus
                 };
                 //TODO : voir plus tard le field node quand on travaillera sur ovh
                 var result = yield proxmoxApi.createLxcContainer(proxmoxApi.node, container);

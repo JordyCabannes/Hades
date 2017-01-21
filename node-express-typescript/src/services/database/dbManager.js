@@ -520,6 +520,22 @@ class DBManager {
             return result == 1;
         });
     }
+    /*permet de savoir si un compte avec ce login exite déjà*/
+    accountExists(login) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var functionAccountExists = function (db) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    var res = yield db.collection('users').find({ "login": login }).count();
+                    return res;
+                });
+            };
+            var db = yield MongoClient.connect(this.url);
+            var result = yield functionAccountExists(db);
+            console.log("result has account for " + login + " is : ", result);
+            db.close();
+            return result == 1;
+        });
+    }
 }
 exports.DBManager = DBManager;
 //# sourceMappingURL=dbManager.js.map

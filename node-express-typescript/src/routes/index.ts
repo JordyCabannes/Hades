@@ -50,7 +50,8 @@ index.get("/User/:login",cors(), async function(req, res, next)
 /*add user account*/
 index.post("/createAccount", cors(), async function(req, res, next)
 {
-    var resHasAccount = await db.hasAnAccount(req.body.login,req.body.password);
+    var resHasAccount = await db.accountExists(req.body.login);
+    console.log(resHasAccount);
     if (!resHasAccount)
     {
         db.ajouter_user(req.body.login,req.body.password,req.body.typeofUser);
@@ -123,7 +124,10 @@ index.post('/createVM', cors(), async function(req, res, next)
                     ostemplate : 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
                     vmid : ObjectID.id,
                     password : req.body.password,
-                    memory:req.body.memory
+                    memory:req.body.memory,
+                    sizeGB: req.body.disk,
+                    cores: req.body.cpus
+
                 }
 
             //TODO : voir plus tard le field node quand on travaillera sur ovh

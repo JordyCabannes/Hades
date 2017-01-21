@@ -29,10 +29,9 @@ export class VmService {
 	    return Promise.reject(error.message || error);
   	}
 
-  	public create(login: string, password: string, memorySize: number){
-      console.log("0000000 :"+login );
+  	public create(login: string, password: string, memorySize: number, cpusNumber:number, diskSize:number){
   		return this.http
-    		.post(this.vmsUrl+'/createVM', JSON.stringify({'login': login,'password': password,'memory': memorySize}), {headers: this.headers})
+    		.post(this.vmsUrl+'/createVM', JSON.stringify({'login': login,'password': password,'memory': memorySize, 'cpus':cpusNumber, 'disk':diskSize}), {headers: this.headers})
     		.map(function(res) {
           console.log(res.json());
           return res.json();
@@ -91,7 +90,7 @@ export class VmService {
     console.log(url);
       return this.http.get(url)
         .map(function(response) {
-          console.log(response.json());
+          //console.log(response.json());
           return response.json();
         })
         .catch(this.handleError);

@@ -79,11 +79,11 @@ export class HomeComponent{
     });
   }
 
-   add(login: string, password:string, memorySize:number): void {
+   add(login: string, password:string, memorySize:number, cpusNumber:number, diskSize:number): void {
     login = login.trim();
     password = password.trim();
-    if (!login || !password || !memorySize) { return; }
-     this.vmService.create(login, password, memorySize)
+    if (!login || !password || !memorySize || !cpusNumber || !diskSize) { return; }
+     this.vmService.create(login, password, memorySize, cpusNumber, diskSize)
         .subscribe(vm => {
           console.log(vm);
           this.createdYet=true;

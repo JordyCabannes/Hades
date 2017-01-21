@@ -38,6 +38,18 @@ export class VmDetailComponent implements OnInit{
   @Input()
   public usageRam:string;
 
+  @Input()
+  public maxdisk:string;
+
+  @Input()
+  public usageDisk:string;
+
+  @Input()
+  public diskRead:string;
+
+  @Input()
+  public diskWrite:string;
+
   public displayMessageBoxStart:boolean=false;
   public displayMessageBoxStop:boolean=false;
   public displayMessageBoxBackUp:boolean=false;
@@ -174,68 +186,51 @@ export class VmDetailComponent implements OnInit{
       }
     }
 
-    public i:number=0;
-    public iH:number=0;
 
     public monitoringVm(){
-      if(this.vmIsStart)
-      {
         this.route.params
         .switchMap((params:Params) => this.vmService.monitoring(+params['id']))
         .subscribe(res=>{
-          console.log(res);
-          this.vmMonitoring=res;
-          this.vmMonitoring.cpu=100*this.vmMonitoring.cpu;
-          this.maxRam=this.vmMonitoring.maxmem/1000000;
-          this.maxRam=this.maxRam.toFixed(3)+" Mo";
-          this.usageRam=this.vmMonitoring.mem/1000000;
-          this.usageRam=this.usageRam.toFixed(3)+" Mo";
-          this.usageCPU=this.vmMonitoring.cpu.toFixed(2);
+          if(res.status=="running"){
+            if(this.vmIsStart==false && this.errorAlreadyStart==false){
+              this.vmIsStart=true;
+            }
+            //console.log(res);
+            this.vmMonitoring=res;
+            this.vmMonitoring.cpu=100*this.vmMonitoring.cpu;
+            this.usageCPU=this.vmMonitoring.cpu.toFixed(2);
 
-          var secondes = this.vmMonitoring.uptime%60;
-          var minutes =(this.vmMonitoring.uptime/60)%60;
-          if(this.i>0){
-            if((minutes%this.i)>0){
-              minutes=this.i;
-            }
-            else{
-              this.i=this.i+1;
-            }
+            this.vmMonitoring.maxmem=this.vmMonitoring.maxmem/1000000;
+            this.maxRam=this.vmMonitoring.maxmem.toFixed(3)+" Mo";
+            this.vmMonitoring.mem=this.vmMonitoring.mem/1000000;
+            this.usageRam=this.vmMonitoring.mem.toFixed(3)+" Mo";
+
+            this.vmMonitoring.maxdisk=this.vmMonitoring.maxdisk/1000000;
+            this.maxdisk=this.vmMonitoring.maxdisk.toFixed(3)+" Mo";
+            this.vmMonitoring.disk=this.vmMonitoring.disk/1000000;
+            this.usageDisk=this.vmMonitoring.disk.toFixed(3)+" Mo";
+            this.diskRead = ((+this.vmMonitoring.diskread)/1000000).toFixed(3)+" Mo";
+            this.diskWrite = ((+this.vmMonitoring.diskwrite)/1000000).toFixed(3)+" Mo";
+          
+            var minutesAux=0;
+
+            var secondes = this.vmMonitoring.uptime%60;
+            var minutes =(this.vmMonitoring.uptime/60)%60;
+
+            var heures = this.vmMonitoring.uptime/3600;
+
+
+
+            this.upTimeDate=Math.floor(heures)+":"+Math.floor(minutes)+":"+Math.floor(secondes);
           }
           else{
-            if((minutes%1)==0 && minutes!=0){
-              this.i=this.i+1;
-              minutes=this.i;
-            }
-            else{
-              minutes=this.i;
-            }
+            this.vmMonitoring=null;
           }
-          var heures = this.vmMonitoring.uptime/3600;
-          if(this.iH>0){
-            if((heures%this.iH)>0){
-              heures=this.iH;
-            }
-            else{
-              this.iH=this.iH+1;
-            }
-          }
-          else{
-            if((heures%1)==0 && heures!=0){
-              this.iH=this.iH+1;
-              heures=this.iH;
-            }
-            else{
-              heures=this.iH;
-            }
-          }
-          this.upTimeDate=heures.toFixed(0)+":"+minutes.toFixed(0)+":"+secondes.toFixed(0);
         });
-      }
       }
 
     public startMonitoring(){
-      setInterval(() => {this.monitoringVm();}, 900);
+      setInterval(() => {this.monitoringVm();}, 100);
     }
 
 }

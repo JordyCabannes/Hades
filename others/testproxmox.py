@@ -39,14 +39,18 @@ available_flavors = { #Ou mettre ça dans un INI
 flavor = available_flavors['xsmall'] #juste un flavor par défaut pour tester
 available_shared_storage_sizes = [10, 50, 100, 500, 1000]
 
+class test:
 
-def ok(response):
-    return response['status']['ok']
+    def __init__(self):
+        pass
 
-def init(local=False):
-    """Initialise les clients proxmox pour chaque node (à partir du fichier INI)"""
-    global b #Node par défaut, pratique pour faire des tests
-    global nodes
+    def ok(response):
+        return response['status']['ok']
+
+    def init(local=False):
+        """Initialise les clients proxmox pour chaque node (à partir du fichier INI)"""
+        global b #Node par défaut, pratique pour faire des tests
+        global nodes
 
     def read_nodes_fichier_ini():
         config = configparser.SafeConfigParser()
@@ -175,6 +179,9 @@ def ajouter_vm_au_reseau_virtuel():
 
 
 init(local=False)
+
+if __name__ == '__main__':
+    obj = test()
 
 
 '''

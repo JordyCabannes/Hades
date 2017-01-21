@@ -32,7 +32,7 @@
 <div *ngIf="messageResultat" id ="creationAccount" class="col-xs-10 col-sm-8 col-md-8 col-lg-6 container-fluid">
 	<div class="row">
 		<div *ngIf="error" id="errorDiv">
-			<h2 id="errorTitle">Error : user account creation did not success</h2>	
+			<h2 id="errorTitle">Error : a user account with this login already exists</h2>	
 			<button id="quitErrorPopup" class="btn btn-default col-xs-push-4 col-xs-4" type="submit" (click)="back()">OK</button>    
 		</div>
 		<div *ngIf="created" id="successDiv">

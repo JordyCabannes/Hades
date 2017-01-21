@@ -501,4 +501,19 @@ export class DBManager
         return result == 1;
     }
 
+    /*permet de savoir si un compte avec ce login exite déjà*/
+    public async accountExists(login:string) : Promise<boolean>
+    {
+        var functionAccountExists = async function(db) {
+             var res = await db.collection('users').find({"login": login}).count();
+             return res;
+        }
+
+        var db = await MongoClient.connect(this.url);
+        var result = await functionAccountExists(db);
+        console.log("result has account for "+login +" is : ", result);
+        db.close();
+        return result == 1;
+    }
+
 }
