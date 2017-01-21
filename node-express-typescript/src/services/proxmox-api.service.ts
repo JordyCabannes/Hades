@@ -120,7 +120,6 @@ export class ProxmoxApiService
             return null;
 
         var id = +response.getBody()['data'];
-
         return {
             id: id
         }
@@ -168,13 +167,16 @@ export class ProxmoxApiService
     public async createLxcContainer(node : string, lxcContainerRequest : ICreateLxcContainerRequest) : Promise<IUpidReply>
     {
         var finalUrl = `/nodes/${node}/lxc`;
-        var body : {[id:string]:any;} = lxcContainerRequest;
+        var body : {[id:string]:any;} = JSON.parse(JSON.stringify(lxcContainerRequest));
         if(body.hasOwnProperty('sizeGB'))
         {
             body['rootfs'] = 'local:' + body['sizeGB'];
             delete body['sizeGB'];
         }
-        var response = await this.httpService.post(finalUrl, lxcContainerRequest);
+
+        body['net0'] = `bridge=vmbr3,name=eth0,ip=192.168.2.${lxcContainerRequest.vmid}/24,gw=192.168.2.254}`;
+
+        var response = await this.httpService.post(finalUrl, body);
 
         if(response.code != 200)
             return null;

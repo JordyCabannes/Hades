@@ -25,16 +25,17 @@ class ProxmoxUtils {
     }
     static getPromoxApi2() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (ProxmoxUtils.proxApi == null) {
+            if (ProxmoxUtils.proxApi2 == null) {
                 var proxmox = new proxmox_service_1.ProxmoxService('ip', '/api2/json');
-                ProxmoxUtils.proxApi = yield proxmox.connect('root@pam', 'password');
-                if (ProxmoxUtils.proxApi != null)
-                    ProxmoxUtils.proxApi.node = 'ns3019351';
+                ProxmoxUtils.proxApi2 = yield proxmox.connect('root@pam', 'password');
+                if (ProxmoxUtils.proxApi2 != null)
+                    ProxmoxUtils.proxApi2.node = 'ns3019351';
             }
-            return ProxmoxUtils.proxApi;
+            return ProxmoxUtils.proxApi2;
         });
     }
 }
 ProxmoxUtils.proxApi = null;
+ProxmoxUtils.proxApi2 = null;
 exports.ProxmoxUtils = ProxmoxUtils;
 //# sourceMappingURL=proxmox.utils.js.map

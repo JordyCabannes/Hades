@@ -1,3 +1,5 @@
+
+
 import {ProxmoxApiService} from "../services/proxmox-api.service";
 import {ProxmoxService} from "../services/proxmox.service";
 /**
@@ -7,6 +9,7 @@ import {ProxmoxService} from "../services/proxmox.service";
 export class ProxmoxUtils {
 
     private static proxApi : ProxmoxApiService = null;
+    private static proxApi2 : ProxmoxApiService = null;
     public static async getPromoxApi() : Promise<ProxmoxApiService> //TODO:gérer le cas où le token n'est plus valide car il a expiré
     {
         if(ProxmoxUtils.proxApi == null)
@@ -21,13 +24,13 @@ export class ProxmoxUtils {
 
     public static async getPromoxApi2() : Promise<ProxmoxApiService> //TODO:gérer le cas où le token n'est plus valide car il a expiré
     {
-        if(ProxmoxUtils.proxApi == null)
+        if(ProxmoxUtils.proxApi2 == null)
         {
             var proxmox = new ProxmoxService('ip', '/api2/json');
-            ProxmoxUtils.proxApi= await proxmox.connect('root@pam', 'password');
-            if(ProxmoxUtils.proxApi != null)
-                ProxmoxUtils.proxApi.node = 'ns3019351';
+            ProxmoxUtils.proxApi2= await proxmox.connect('root@pam', 'password');
+            if(ProxmoxUtils.proxApi2 != null)
+                ProxmoxUtils.proxApi2.node = 'ns3019351';
         }
-        return ProxmoxUtils.proxApi;
+        return ProxmoxUtils.proxApi2;
     }
 }

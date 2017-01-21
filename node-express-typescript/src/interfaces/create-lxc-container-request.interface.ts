@@ -10,5 +10,5 @@ export interface ICreateLxcContainerRequest  {
     description? : string,
     memory? : number,
     sizeGB? : number,
-    cores? : number,
+    cores? : number
 }

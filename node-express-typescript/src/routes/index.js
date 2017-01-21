@@ -93,22 +93,22 @@ index.post('/createVM', cors(), function (req, res, next) {
             if (proxmoxApi != null) {
                 var ObjectID = yield proxmoxApi.getClusterVmNextId();
                 //TODO: gérer plus tard  le fait que l'user premium doit spécifier le nb de coeur
-                //Note Nicolas : L'user devrait spécifier un Flavor parmi ceux prédéfinis, et on récupère les caractéristiques du flavor dans la BDD. 
+                //Note Nicolas : L'user devrait spécifier un Flavor parmi ceux prédéfinis, et on récupère les caractéristiques du flavor dans la BDD.
                 var container = {
                     ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
                     vmid: ObjectID.id,
                     password: req.body.password,
-                    memory: req.body.memory,
+                    memory: req.body.memory
                 };
                 //TODO : voir plus tard le field node quand on travaillera sur ovh
-                var result = yield proxmoxApi.createLxcContainer('ns3060138', container);
+                var result = yield proxmoxApi.createLxcContainer(proxmoxApi.node, container);
                 if (result == null) {
                     res.send({ "containerID": -1, "Information": "Fail create vm" });
                 }
                 else {
                     //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
                     //console.log("--------- creation réussi")
-                    var resAdd = db.ajouter_vm_a_user(req.body.login, 'ns3060138', ObjectID.id, false, req.body.login + ObjectID.id.toString());
+                    var resAdd = db.ajouter_vm_a_user(req.body.login, proxmoxApi.node, ObjectID.id, false, req.body.login + ObjectID.id.toString());
                     //db.old_ajouter_vm_a_user(req.body.login,ObjectID.id); //changer plus tard pour ajouter_vm_a_user()
                     console.log("------ " + resAdd);
                     res.send({ "containerID": ObjectID.id, "Information": "ok" }); //send back vm creation information
@@ -127,7 +127,7 @@ index.get("/monitoring/:vmid", function (req, res, next) {
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
         if (proxmoxApi != null) {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var monitoringResult = yield proxmoxApi.getContainerStatus('ns3060138', req.params.vmid);
+            var monitoringResult = yield proxmoxApi.getContainerStatus(proxmoxApi.node, req.params.vmid);
             if (monitoringResult == null) {
                 res.send({ "Information": "Fail get monitoring informations" });
             }
@@ -142,7 +142,7 @@ index.get("/monitoring/:vmid", function (req, res, next) {
     });
 });
 /*createBackup
-théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
+ théoriquement on peu plusieurs backups, mais on va se limiter à une backup pour le projet*/
 index.get("/createBackup/:id", cors(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         //connection
@@ -152,7 +152,7 @@ index.get("/createBackup/:id", cors(), function (req, res, next) {
         }
         else {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var createBackupResult = yield proxmoxApi.createContainerBackup('ns3060138', req.params.id);
+            var createBackupResult = yield proxmoxApi.createContainerBackup(proxmoxApi.node, req.params.id);
             if (createBackupResult == null) {
                 res.send({ "Information": "Fail create backup" });
             }
@@ -165,7 +165,7 @@ index.get("/createBackup/:id", cors(), function (req, res, next) {
     });
 });
 /*restore backup
-TODO: vm doit être éteinte pour pouvoir faire la backup*/
+ TODO: vm doit être éteinte pour pouvoir faire la backup*/
 index.post("/restoreBackup", function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
@@ -180,7 +180,7 @@ index.post("/restoreBackup", function (req, res, next) {
             var resHasBackup = yield db.hasBackupAssociateWithVm("coucou", 130);
             if (resHasBackup) {
                 //TODO : voir plus tard le field node quand on travaillera sur ovh
-                var restoreLxcContainerResult = yield proxmoxApi.restoreLxcContainer('ns3060138', restoreLxcContainer);
+                var restoreLxcContainerResult = yield proxmoxApi.restoreLxcContainer(proxmoxApi.node, restoreLxcContainer);
                 if (restoreLxcContainerResult != null) {
                     res.send({ "Information": "ok" });
                 }
@@ -197,17 +197,17 @@ index.post("/restoreBackup", function (req, res, next) {
 index.get("/testFrameself", function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         var proxmoxApi = yield proxmox_utils_1.ProxmoxUtils.getPromoxApi();
-        //proxmoxApi.shutdownLxcContainer('ns3060138', 111);
         var ObjectID = yield proxmoxApi.getClusterVmNextId();
         var container = {
             ostemplate: 'local:vztmpl/debian-8.0-standard_8.4-1_amd64.tar.gz',
-            vmid: ObjectID.id,
-            password: 'rototoroot',
+            vmid: 100,
+            password: 'tototo',
             memory: 1024,
             sizeGB: 1
         };
-        proxmoxApi.createLxcContainer('ns3060138', container);
-        //frameself.reportCreateLxcContainer('ns3060138', container);
+        var result = yield proxmoxApi.createLxcContainer(proxmoxApi.node, container);
+        if (result == null)
+            frameself.reportCreateLxcContainer(proxmoxApi.node, container);
     });
 });
 /*startVM: start un container*/
@@ -220,7 +220,7 @@ index.get("/startVM/:id", cors(), function (req, res, next) {
         }
         else {
             //TODO : voir plus tard le field node quand on travaillera sur ovh
-            var startVMResult = yield proxmoxApi.startLxcContainer('ns3060138', req.params.id);
+            var startVMResult = yield proxmoxApi.startLxcContainer(proxmoxApi.node, req.params.id);
             if (startVMResult == null) {
                 res.send({ "Information": "Fail start Vm" });
             }
@@ -239,7 +239,7 @@ index.get("/stopVM/:id", cors(), function (req, res, next) {
             res.send({ "Information": "Fail connection server" });
         }
         else {
-            var stopVMResult = yield proxmoxApi.stopLxcContainer('ns3060138', req.params.id);
+            var stopVMResult = yield proxmoxApi.stopLxcContainer(proxmoxApi.node, req.params.id);
             if (stopVMResult == null) {
                 res.send({ "Information": "Fail stop Vm" });
             }
