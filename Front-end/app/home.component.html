@@ -34,15 +34,15 @@
 				</div>
 				<div class="form-group col-sm-6 col-md-6 col-lg-6">
 					<label for="memorySize">RAM size(Mo)</label>
-					<input #memorySize type="number" min="0" max="8192" step="1024" id="memorySize" name="memorySize" class="form-control" required/>
+					<input #memorySize type="number" min="512" max="8192" step="512" id="memorySize" name="memorySize" class="form-control" required/>
 				</div>
 				<div class="form-group col-sm-6 col-md-6 col-lg-6">
 					<label for="cpusNumber">Number of CPUS(max 8)</label>
-					<input #cpusNumber type="number" min="0" max="8" step="1" id="cpusNumber" name="cpusNumber" class="form-control" required/>
+					<input #cpusNumber type="number" min="1" max="8" step="1" id="cpusNumber" name="cpusNumber" class="form-control" required/>
 				</div>
 				<div class="form-group col-sm-6 col-md-6 col-lg-6">
 					<label for="diskSize">Storage size(Go)</label>
-					<input #diskSize type="number" min="0" step="128" max="1024" id="diskSize" name="diskSize" class="form-control" required/>
+					<input #diskSize type="number" min="1" step="1" max="8" id="diskSize" name="diskSize" class="form-control" required/>
 				</div>
 				<button id="creationVmYes" class="btn btn-default" type="submit" (click)="add(user.login, password.value, memorySize.value, cpusNumber.value, diskSize.value);">Create</button>    
 				<a id="cancel" class="btn btn-default" (click)="goHome()">Cancel</a>
